@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { LongArrowRightIcon } from "@/components/ui/Icons";
+import { blurProps, QUALITY } from "@/lib/images";
 import { noPadding, padVars, ratioVars, type Ratio, type Spacing } from "@/lib/sizing";
 
 export type ShowcaseItem = {
@@ -29,6 +30,7 @@ const adjustment = { "--adjustment_m": "20px", "--adjustment_d": "20px" } as Rea
 
 /** `section_collection_showcase`: full-bleed image tiles in an auto-fit grid with a tertiary button. */
 export function CollectionShowcase({ items, ratio, alignment, padding = noPadding, heading, priority }: Props) {
+  const quality = priority ? QUALITY.hero : QUALITY.tile;
   const desktopSizes = items.length > 1 ? `(min-width: 1025px) ${Math.round(100 / items.length)}vw, 100vw` : "100vw";
 
   return (
@@ -49,20 +51,22 @@ export function CollectionShowcase({ items, ratio, alignment, padding = noPaddin
                           <Image
                             className="image__element not_desktop"
                             src={item.mobileImage}
+                            {...blurProps(item.mobileImage)}
                             alt=""
                             fill
                             sizes="100vw"
-                            quality={90}
+                            quality={quality}
                             priority={priority}
                             style={{ objectPosition: item.focus ?? "50% 50%" }}
                           />
                           <Image
                             className="image__element not_mobile not_pocket"
                             src={item.image}
+                            {...blurProps(item.image)}
                             alt=""
                             fill
                             sizes={desktopSizes}
-                            quality={90}
+                            quality={quality}
                             priority={priority}
                             style={{ objectPosition: "50% 50%" }}
                           />
@@ -71,10 +75,11 @@ export function CollectionShowcase({ items, ratio, alignment, padding = noPaddin
                         <Image
                           className="image__element"
                           src={item.image}
+                          {...blurProps(item.image)}
                           alt=""
                           fill
                           sizes={desktopSizes}
-                          quality={90}
+                          quality={quality}
                           priority={priority}
                           style={{ objectPosition: item.focus ?? "50% 50%" }}
                         />

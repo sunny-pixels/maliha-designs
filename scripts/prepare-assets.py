@@ -7,7 +7,9 @@ optimised files into ../public. Requires Pillow only.
     python scripts/prepare-assets.py
 """
 
+import base64
 import io
+import json
 import re
 import shutil
 import zlib
@@ -20,7 +22,26 @@ SRC = ROOT.parent / "maliha-assets"
 PUBLIC = ROOT / "public"
 LOOKBOOK = PUBLIC / "images" / "lookbook"
 MALIHA = PUBLIC / "images" / "maliha"
-QUALITY = 88
+QUALITY = 82
+# Largest width any slot needs: lookbook tiles are ≤ 1/3 of a 1440px layout at
+# 2x DPR, product cards ≤ 1/4. Bigger originals only slow the image optimiser.
+MAX_W = 1400
+PLACEHOLDERS = ROOT / "src" / "data" / "placeholders.json"
+
+
+def save(img: Image.Image, path: Path, max_w: int = MAX_W) -> None:
+    if img.width > max_w:
+        img = img.resize((max_w, round(img.height * max_w / img.width)), Image.LANCZOS)
+    img.save(path, quality=QUALITY, optimize=True, progressive=True)
+
+
+def blur_data_url(path: Path) -> str:
+    """Tiny blurred JPEG as a data URL, shown while the real image loads."""
+    img = Image.open(path).convert("RGB")
+    img.thumbnail((10, 10))
+    buf = io.BytesIO()
+    img.save(buf, "WEBP", quality=40)
+    return "data:image/webp;base64," + base64.b64encode(buf.getvalue()).decode()
 
 
 def extract_pdf_images(pdf: Path) -> list[Image.Image]:
@@ -83,25 +104,24 @@ def main() -> None:
     pdf_images = extract_pdf_images(SRC / "Maliha SS2021 - Lookbook.pdf")
     pdf_images[0].save(PUBLIC / "logo.png", optimize=True)
     for n, img in enumerate(pdf_images[2:], start=3):
-        img.save(LOOKBOOK / f"look-{n:02d}.jpg", quality=QUALITY, optimize=True, progressive=True)
+        save(img, LOOKBOOK / f"look-{n:02d}.jpg")
 
     # Instagram photos, in filename (= posting) order.
     ig = sorted(SRC.glob("SaveClip.App_*.jpg"))
     for n, path in enumerate(ig, start=1):
-        Image.open(path).convert("RGB").save(
-            MALIHA / f"ig-{n:02d}.jpg", quality=QUALITY, optimize=True, progressive=True
-        )
+        save(Image.open(path).convert("RGB"), MALIHA / f"ig-{n:02d}.jpg")
 
     # Wide banners at the exact desktop ratios (24/10 and 10/4).
-    triptych([MALIHA / "ig-09.jpg", MALIHA / "ig-10.jpg", MALIHA / "ig-11.jpg"], 2400, 1000, 0.3, trim_left=[0.05, 0.05, 0.14]).save(
-        MALIHA / "banner-woman.jpg", quality=QUALITY, optimize=True, progressive=True
-    )
-    triptych([LOOKBOOK / "look-10.jpg", LOOKBOOK / "look-16.jpg", LOOKBOOK / "look-23.jpg"], 2400, 960, 0.22).save(
-        MALIHA / "banner-atelier.jpg", quality=QUALITY, optimize=True, progressive=True
-    )
-    triptych([LOOKBOOK / "look-05.jpg", LOOKBOOK / "look-15.jpg", LOOKBOOK / "look-30.jpg"], 2400, 1000, 0.2).save(
-        MALIHA / "banner-lookbook.jpg", quality=QUALITY, optimize=True, progressive=True
-    )
+    save(triptych([MALIHA / "ig-09.jpg", MALIHA / "ig-10.jpg", MALIHA / "ig-11.jpg"], 2400, 1000, 0.3, trim_left=[0.05, 0.05, 0.14]), MALIHA / "banner-woman.jpg", max_w=2400)
+    save(triptych([LOOKBOOK / "look-10.jpg", LOOKBOOK / "look-16.jpg", LOOKBOOK / "look-23.jpg"], 2400, 960, 0.22), MALIHA / "banner-atelier.jpg", max_w=2400)
+    save(triptych([LOOKBOOK / "look-05.jpg", LOOKBOOK / "look-15.jpg", LOOKBOOK / "look-30.jpg"], 2400, 1000, 0.2), MALIHA / "banner-lookbook.jpg", max_w=2400)
+
+    # Blur placeholders for every public image, keyed by URL.
+    blurs = {
+        "/" + p.relative_to(PUBLIC).as_posix(): blur_data_url(p)
+        for p in sorted((PUBLIC / "images").rglob("*.jpg"))
+    }
+    PLACEHOLDERS.write_text(json.dumps(blurs, indent=1) + "\n", encoding="utf-8")
 
     print(f"lookbook: {len(pdf_images) - 2} looks, instagram: {len(ig)} photos, logo: {pdf_images[0].size}")
 

@@ -7,6 +7,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperType } from "swiper";
 import type { Product } from "@/data/products";
 import { gsap, useGSAP } from "@/lib/gsap";
+import { blurProps, QUALITY } from "@/lib/images";
 import { padVars, ratioVars, type Ratio, type Spacing } from "@/lib/sizing";
 import { ArrowLeftIcon, ArrowRightIcon, LongArrowRightIcon } from "@/components/ui/Icons";
 import { ProductCard } from "@/components/product/ProductCard";
@@ -89,10 +90,11 @@ export function LookbookSection({ title, text, button, image, imageFocus, ratio,
                       <Image
                         className="image__element"
                         src={image}
+                        {...blurProps(image)}
                         alt=""
                         fill
                         sizes="(min-width: 1025px) 50vw, 100vw"
-                        quality={90}
+                        quality={QUALITY.tile}
                         style={{ objectPosition: imageFocus ?? "50% 50%" }}
                       />
                     </div>

@@ -6,6 +6,7 @@ import { useId, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperType } from "swiper";
 import { formatPrice, type Product } from "@/data/products";
+import { blurProps, QUALITY } from "@/lib/images";
 import { ArrowLeftIcon, ArrowRightIcon, FavoritesFilledIcon, FavoritesIcon } from "@/components/ui/Icons";
 
 const MAX_SIZES = 6;
@@ -43,6 +44,11 @@ export function ProductCard({ product, sizes = "(min-width: 1025px) 25vw, 80vw" 
   const [swiper, setSwiper] = useState<SwiperType | null>(null);
   const [slide, setSlide] = useState(0);
   const [favorite, setFavorite] = useState(false);
+  // Only the first photo loads up front; the others are fetched once the
+  // shopper shows interest (hover, focus or touch). DevTools showed carousels
+  // downloading every slide of every card otherwise.
+  const [armed, setArmed] = useState(false);
+  const arm = () => setArmed(true);
   const multi = product.images.length > 1;
 
   const step = (e: React.MouseEvent, dir: -1 | 1) => {
@@ -54,7 +60,13 @@ export function ProductCard({ product, sizes = "(min-width: 1025px) 25vw, 80vw" 
 
   return (
     <product-card>
-      <div className="colorGroup--primary" style={{ "--aspect-ratio": "4/5", height: "100%", position: "relative" } as React.CSSProperties}>
+      <div
+        className="colorGroup--primary"
+        style={{ "--aspect-ratio": "4/5", height: "100%", position: "relative" } as React.CSSProperties}
+        onPointerEnter={arm}
+        onTouchStart={arm}
+        onFocus={arm}
+      >
         <Link className="pc__wrapper-link" href={`/products/${product.slug}`}>
           <div className="card-product">
             {product.label && (
@@ -103,17 +115,18 @@ export function ProductCard({ product, sizes = "(min-width: 1025px) 25vw, 80vw" 
             >
               {product.images.map((src, i) => (
                 <SwiperSlide key={src} className="AspectRatio" style={{ "--aspect-ratio": "4/5" } as React.CSSProperties}>
-                  <Image
-                    className="product-card__image"
-                    src={src}
-                    alt={product.name}
-                    fill
-                    sizes={sizes}
-                    quality={90}
-                    priority={false}
-                    loading={i === 0 ? "eager" : "lazy"}
-                    style={{ objectPosition: "50% 20%" }}
-                  />
+                  {(i === 0 || armed) && (
+                    <Image
+                      className="product-card__image"
+                      src={src}
+                      {...blurProps(src)}
+                      alt={product.name}
+                      fill
+                      sizes={sizes}
+                      quality={QUALITY.tile}
+                      style={{ objectPosition: "50% 20%" }}
+                    />
+                  )}
                 </SwiperSlide>
               ))}
               {multi && (

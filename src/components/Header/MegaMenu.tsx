@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRef, useState } from "react";
 import type { NavCard, TopMenu } from "@/data/navigation";
 import { gsap, useGSAP } from "@/lib/gsap";
+import { blurProps } from "@/lib/images";
 import { ArrowRightIcon } from "@/components/ui/Icons";
 import { TertiaryButton } from "@/components/ui/TertiaryButton";
 
@@ -163,7 +164,7 @@ export function MegaMenu({ menu, open, onClose }: Props) {
           <div className="desktop-menu__collection-panel" key={activeKey ?? "root"}>
             {cards.map((c) => (
               <Link key={c.label} href={c.href} className="desktop-menu__collection-card" aria-label={c.label}>
-                <Image src={c.img} alt="" aria-hidden="true" fill sizes="(min-width: 1025px) 25vw, 100vw" />
+                <Image src={c.img} {...blurProps(c.img)} alt="" aria-hidden="true" fill sizes="(min-width: 1025px) 25vw, 100vw" />
                 <span className="desktop-menu__collection-content" aria-hidden="true">
                   <TertiaryButton label={c.label} textClass="u-p2" className="u-p2" />
                 </span>

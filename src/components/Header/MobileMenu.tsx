@@ -6,6 +6,7 @@ import { useRef, useState } from "react";
 import { brand } from "@/config/brand";
 import { navigation, type NavCard } from "@/data/navigation";
 import { gsap, useGSAP } from "@/lib/gsap";
+import { blurProps } from "@/lib/images";
 import { useUI } from "@/components/UIProvider";
 import { useDrawerAnimation } from "@/components/drawers/useDrawerAnimation";
 import { ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon } from "@/components/ui/Icons";
@@ -18,7 +19,7 @@ function CollectionLinks({ cards, multi }: { cards: NavCard[]; multi?: boolean }
       {cards.map((c) => (
         <Link key={c.label} href={c.href} className="mobile-menu__collection-item">
           <div className="image__container AspectRatio AspectRatio--withFallback mobile-menu__collection-media">
-            <Image className="main-menu__logo-image" src={c.img} alt="" fill sizes="50vw" />
+            <Image className="main-menu__logo-image" src={c.img} {...blurProps(c.img)} alt="" fill sizes="50vw" />
           </div>
           <TertiaryButton label={c.label} textClass="u-p2" className="u-p2" />
         </Link>

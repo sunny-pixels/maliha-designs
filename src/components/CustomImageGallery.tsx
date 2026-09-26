@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { LongArrowRightIcon } from "@/components/ui/Icons";
+import { blurProps, QUALITY } from "@/lib/images";
 import { padVars, ratioVars, type Ratio, type Spacing } from "@/lib/sizing";
 
 export type GalleryItem = { image: string; href: string; button?: string; focus?: string; alt?: string };
@@ -38,10 +39,11 @@ export function CustomImageGallery({ items, ratio, padding, columns }: Props) {
                     <Image
                       className="image__element"
                       src={item.image}
+                      {...blurProps(item.image)}
                       alt={item.alt ?? ""}
                       fill
                       sizes={`(min-width: 1025px) ${Math.round(100 / columns.d)}vw, ${Math.round(100 / columns.m)}vw`}
-                      quality={90}
+                      quality={QUALITY.tile}
                       style={{ objectPosition: item.focus ?? "50% 50%" }}
                     />
                   </div>
