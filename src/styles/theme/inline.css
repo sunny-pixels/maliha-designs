@@ -1,0 +1,298 @@
+/*
+ * Styles that the original page rendered inline (<style> blocks and runtime
+ * CSS variables set by the theme JS). Section-specific class names were
+ * shortened; values are unchanged.
+ */
+
+/* ---------- Color groups ---------- */
+:root,
+.colorGroup--primary {
+  --background_color: #fdfcfb;
+  --background_color_2: #efe9e3;
+  --primary_text: #231f20;
+  --secondary_text: #fdfcfb;
+  --primary_accent: #efe9e3;
+  --secondary_accent: #9b6a45;
+  --tertiary_accent: ;
+
+  --primary_gray: #6c645c;
+  --secondary_gray: #a39c94;
+  --tertiary_gray: #d3ccc4;
+
+  --button-bg: #efe9e3;
+  --button-content: #fdfcfb;
+  --button-border: #efe9e3;
+}
+
+.colorGroup--secondary {
+  --background_color: #efe9e3;
+  --background_color_2: #fffccc;
+  --primary_text: #231f20;
+  --secondary_text: #fdfcfb;
+  --primary_accent: #65b2e8;
+  --secondary_accent: #2538b0;
+  --tertiary_accent: ;
+
+  --primary_gray: #393f3e;
+  --secondary_gray: #cfd0d5;
+  --tertiary_gray: #f2f2f0;
+
+  --button-bg: #65b2e8;
+  --button-content: #efe9e3;
+  --button-border: #65b2e8;
+}
+
+/* ---------- Global variables ---------- */
+:root {
+  --body_color: #fdfcfb;
+
+  --loader_color: #1e242a;
+
+  --label_custom_Bg: rgba(239, 233, 227, 0.7);
+  --label_custom_text: #ffffff;
+  --label_soldOut_Bg: rgba(245, 245, 245, 0.2);
+  --label_soldOut_text: #1e242a;
+
+  --alert_success: #2fa34e;
+  --alert_error: #dc0428;
+
+  --pageTransitionColor: #ffffff;
+
+  /* Buttons */
+  --btn_primary_on_light_bg: rgb(35, 31, 32);
+  --btn_primary_on_light_txt: rgb(253, 252, 251);
+  --btn_primary_on_light_border: rgb(35, 31, 32);
+
+  --btn_primary_on_dark_bg: rgb(253, 252, 251);
+  --btn_primary_on_dark_txt: rgb(19, 22, 25);
+  --btn_primary_on_dark_border: rgb(19, 22, 25);
+
+  --btn_primary_on_light_txt_hover: rgb(35, 31, 32);
+  --btn_primary_on_light_border_hover: rgb(253, 252, 251);
+
+  --btn_primary_on_dark_txt_hover: rgb(239, 233, 227);
+  --btn_primary_on_dark_border_hover: rgb(239, 233, 227);
+
+  --btn_secondary_on_light_bg_hover: rgba(35, 31, 32, 0.2);
+  --btn_secondary_on_dark_bg_hover: rgba(253, 252, 251, 0.2);
+
+  /* Fonts — swap --font-brand for a licensed face in src/app/fonts.ts */
+  --type_heading_font: var(--font-brand), "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --type_primary_paragraph_font: var(--font-brand), "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --type_secondary_paragraph_font: var(--font-brand), "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --type_button_font: var(--font-brand), "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  --weight_heading_font: 400;
+  --weight_paragraph_font: 300;
+  --weight_secondary_font: 400;
+  --weight_button_font: 400;
+
+  --section_max_width: 1440px;
+
+  /* Header */
+  --header-sticky: 1;
+  --header-bg-color: #fdfcfb;
+  --header-text-color: #231f20;
+  --header-trtxt-color: #fdfcfb;
+  --header-tx-color: transparent;
+  --logo-invert: invert(1) brightness(1000%);
+  --header-height: 42px;
+  --header-height-fixed: 42px;
+  --submenu-position: 42px;
+
+  /* Announcement */
+  --ann-is-transparent: 0;
+  --ann-is-transparent-control: 1;
+  --announcement-height: 0;
+  --announcement-dynamic-height: 1.75rem;
+  --announcement-height-fixed: 1.75rem;
+
+  /* Runtime values (kept in sync by useLayoutVars) */
+  --header-dynamic-height: var(--header-height);
+  --viewport-height: 100vh;
+}
+
+@media screen and (min-width: 1025px) {
+  :root {
+    --header-height: 50px;
+    --header-height-fixed: 50px;
+    --submenu-position: 50px;
+  }
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  background-color: var(--body_color);
+}
+
+/* ---------- Announcement bar ---------- */
+.announcementBar,
+.announcement-bar {
+  background-color: var(--background_color);
+  color: var(--primary_text);
+}
+
+.announcement-bar__inner,
+.announcement-bar__inner .rte a {
+  color: var(--primary_text);
+  text-decoration: none;
+}
+
+.announcementBar,
+.announcement-bar,
+.announcement-bar__swiper.swiper,
+.announcement-bar__wrapper {
+  height: 28px;
+  padding: 0 16px;
+}
+
+.announcement-bar__swiper.swiper {
+  overflow: hidden;
+}
+
+.announcement-bar__swiper .swiper-wrapper {
+  align-items: center;
+}
+
+.announcement-bar__swiper .swiper-slide {
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.paddingControl--announcement {
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+@media screen and (min-width: 1025px) {
+  .paddingControl--announcement {
+    padding-right: 40px;
+    padding-left: 40px;
+  }
+}
+
+/* ---------- Header logo ----------
+ * Maliha's logo is a gold box (≈2.56:1) rather than Ströms' 4:1 wordmark,
+ * so the slot is narrower and keeps the full logo visible.
+ */
+.header-logo--main {
+  --aspect-ratio: 2.56;
+}
+
+.header-logo--main > img {
+  object-fit: contain !important;
+}
+
+.header-logo--main.not_desktop {
+  width: 82px;
+  display: block;
+}
+
+@media screen and (min-width: 1025px) {
+  .header-logo--main.not_mobile.not_pocket {
+    width: 100px !important;
+    margin-left: 0;
+    margin-right: auto;
+  }
+}
+
+/* ---------- Collection showcase grids ---------- */
+@media screen and (max-width: 1024px) {
+  .collection-showcase--grid .swiper-wrapper.collection-showcase__image-outer-wrapper {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  .collection-showcase--grid .swiper-scrollbar {
+    visibility: hidden;
+  }
+}
+
+@media screen and (min-width: 1025px) {
+  .collection-showcase--grid .swiper-wrapper.collection-showcase__image-outer-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(324px, 1fr));
+    max-width: 100%;
+    margin: 0 auto;
+  }
+}
+
+.group-text-button__block-wrapper--bg {
+  background-color: var(--background_color_2);
+}
+
+/* ---------- Footer ---------- */
+.paddingControl--footer {
+  padding-top: 64px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+@media screen and (min-width: 1025px) {
+  .paddingControl--footer {
+    padding-top: 64px;
+    padding-bottom: 20px;
+    padding-right: 40px;
+    padding-left: 40px;
+  }
+}
+
+/* ---------- Per-section sizing ----------
+ * The theme generated one class per section for image ratios and paddings.
+ * Components now pass the same values as CSS variables instead:
+ *   --ar-m / --ar-d                     aspect ratio (mobile / ≥1025px)
+ *   --pt-m --pb-m --px-m / --pt-d …     padding top / bottom / sides
+ */
+.ratio--responsive {
+  --aspect-ratio: var(--ar-m);
+}
+
+.pad--responsive {
+  padding: var(--pt-m, 0) var(--px-m, 0) var(--pb-m, 0);
+}
+
+@media screen and (min-width: 1025px) {
+  .ratio--responsive {
+    --aspect-ratio: var(--ar-d);
+  }
+
+  .pad--responsive {
+    padding: var(--pt-d, 0) var(--px-d, 0) var(--pb-d, 0);
+  }
+}
+
+/* ---------- Lookbook ---------- */
+.lookbook-hotspot:before {
+  transform: translate(-50%, -50%) scale(var(--pulse, 1));
+}
+
+/* The theme styled `swiper-init` elements; Swiper React renders div.swiper. */
+.section-lookbook .lookbook-product-slider .swiper {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* ---------- Behaviour hooks (replacing theme JS) ---------- */
+
+/* Drawers are shown/hidden by GSAP; keep them out of the way until opened. */
+.Drawer--wrapper[aria-expanded="false"] {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* The theme JS set height on these; GSAP now owns that. */
+.mobile-menu__contact-info-content,
+.footer .Dropdown--Content {
+  overflow: hidden;
+}
