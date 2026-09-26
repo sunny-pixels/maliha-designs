@@ -95,7 +95,7 @@ export function Footer() {
                     <span className="VisuallyHidden">{brand.fullName}</span>
                     <div
                       className="footer-image__icon"
-                      style={{ "--custom-width-mobile": "114px", "--custom-width-desktop": "140px" } as React.CSSProperties}
+                      style={{ "--custom-width-mobile": "160px", "--custom-width-desktop": "200px" } as React.CSSProperties}
                     >
                       <Image
                         src={brand.footerLogo.src}

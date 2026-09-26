@@ -47,7 +47,11 @@ export function AnnouncementBar() {
                 className="swiper-slide heading-block adjustment rte u-p3"
                 role="group"
                 aria-label={`${i + 1} / ${messages.length}`}
-                style={{ height: 28, position: messages.length > 1 && i > 0 ? "absolute" : undefined }}
+                style={{
+                  height: 28,
+                  // Later messages start hidden in the server HTML so they never overlap before hydration.
+                  ...(i > 0 && { position: "absolute", opacity: 0, visibility: "hidden" }),
+                }}
               >
                 <p>
                   <Link href={m.href} title={m.label}>

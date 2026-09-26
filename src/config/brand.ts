@@ -2,9 +2,9 @@
 export const brand = {
   name: "Maliha",
   fullName: "Maliha by Anar & Anoli",
-  /** Gold logo box, extracted from the SS21 lookbook (≈2.56:1). */
-  logo: { src: "/logo.png", width: 636, height: 248 },
-  footerLogo: { src: "/logo.png", width: 636, height: 248 },
+  /** Transparent gold wordmark (≈3.77:1), trimmed from public/logo_new.png by scripts/prepare-assets.py. */
+  logo: { src: "/logo-maliha.png", width: 539, height: 143 },
+  footerLogo: { src: "/logo-maliha.png", width: 539, height: 143 },
   email: "hello@malihadesigns.com",
   phone: "+91 00000 00000",
   address: "Mumbai, India",

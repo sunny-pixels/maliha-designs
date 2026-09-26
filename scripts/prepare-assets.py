@@ -68,6 +68,21 @@ def extract_pdf_images(pdf: Path) -> list[Image.Image]:
     return images
 
 
+def save_logo(fallback: Image.Image) -> None:
+    """Header/footer logo: the transparent gold wordmark (public/logo_new.png),
+    trimmed to its visible pixels. `maliha-assets/logo_new.png` has the
+    checkerboard baked in, so it can't be used. Falls back to the lookbook's
+    gold-box logo if the transparent file is missing."""
+    src = PUBLIC / "logo_new.png"
+    if not src.exists():
+        fallback.save(PUBLIC / "logo-maliha.png", optimize=True)
+        return
+    img = Image.open(src).convert("RGBA")
+    left, top, right, bottom = img.split()[3].point(lambda a: 255 if a > 8 else 0).getbbox()
+    pad = 2
+    img.crop((max(0, left - pad), max(0, top - pad), right + pad, bottom + pad)).save(PUBLIC / "logo-maliha.png", optimize=True)
+
+
 def cover(img: Image.Image, w: int, h: int, focus_y: float = 0.5) -> Image.Image:
     """Resize + crop to exactly w×h (like CSS object-fit: cover)."""
     scale = max(w / img.width, h / img.height)
@@ -94,7 +109,8 @@ def main() -> None:
     for old in ["hero-man.jpg", "hero-woman.jpg", "store-facade.jpg"]:
         (PUBLIC / "images" / old).unlink(missing_ok=True)
     shutil.rmtree(PUBLIC / "images" / "menu", ignore_errors=True)
-    for placeholder in ["logo.svg", "logo-footer.svg"]:
+    # New filename so image-optimiser and browser caches never serve the old logo.
+    for placeholder in ["logo.svg", "logo-footer.svg", "logo.png"]:
         (PUBLIC / placeholder).unlink(missing_ok=True)
 
     LOOKBOOK.mkdir(parents=True, exist_ok=True)
@@ -102,7 +118,7 @@ def main() -> None:
 
     # Lookbook PDF: image 1 is the logo, 2 a line drawing, 3–35 the looks.
     pdf_images = extract_pdf_images(SRC / "Maliha SS2021 - Lookbook.pdf")
-    pdf_images[0].save(PUBLIC / "logo.png", optimize=True)
+    save_logo(pdf_images[0])
     for n, img in enumerate(pdf_images[2:], start=3):
         save(img, LOOKBOOK / f"look-{n:02d}.jpg")
 

@@ -22,7 +22,7 @@ function Logo({ variant }: { variant: "desktop" | "mobile" }) {
             alt=""
             fill
             priority
-            sizes={desktop ? "100px" : "82px"}
+            sizes={desktop ? "140px" : "104px"}
             quality={90}
             style={{ objectPosition: "50% 50%" }}
           />
