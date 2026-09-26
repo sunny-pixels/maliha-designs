@@ -4,11 +4,16 @@ import { CustomImageGallery } from "@/components/CustomImageGallery";
 import { HeadingText } from "@/components/HeadingText";
 import { ProductCarousel } from "@/components/product/ProductCarousel";
 import { featuredProducts } from "@/data/products";
+import { shareMetadata } from "@/lib/seo";
 import type { Spacing } from "@/lib/sizing";
 
+const title = "SS21 Lookbook";
+const description = "The Maliha SS21 lookbook — kurta sets, shararas and lehengas handcrafted by Anar & Anoli.";
+
 export const metadata: Metadata = {
-  title: "SS21 Lookbook | Maliha",
-  description: "The Maliha SS21 lookbook — kurta sets, shararas and lehengas handcrafted by Anar & Anoli.",
+  title,
+  description,
+  ...shareMetadata({ title: `${title} | Maliha`, description, path: "/lookbook" }),
 };
 
 const look = (n: number) => `/images/lookbook/look-${String(n).padStart(2, "0")}.jpg`;

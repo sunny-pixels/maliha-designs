@@ -5,11 +5,16 @@ import { HeadingText } from "@/components/HeadingText";
 import { LookbookSection } from "@/components/LookbookSection";
 import { ProductCarousel } from "@/components/product/ProductCarousel";
 import { featuredProducts, lookbookProducts } from "@/data/products";
+import { shareMetadata } from "@/lib/seo";
 import type { Spacing } from "@/lib/sizing";
 
+const title = "Woman – Kurta Sets, Lehengas & Occasion Wear";
+const description = "Handcrafted Indian occasion wear for women by Maliha — kurta sets, shararas, lehengas and dupattas.";
+
 export const metadata: Metadata = {
-  title: "Woman – Kurta sets, lehengas & occasion wear | Maliha",
-  description: "Handcrafted Indian occasion wear for women by Maliha — kurta sets, shararas, lehengas and dupattas.",
+  title,
+  description,
+  ...shareMetadata({ title: `${title} | Maliha`, description, path: "/woman" }),
 };
 
 const ig = (n: number) => `/images/maliha/ig-${String(n).padStart(2, "0")}.jpg`;
