@@ -2,10 +2,9 @@
 
 import Image from "next/image";
 import Link from "@/components/ui/SiteLink";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { brand } from "@/config/brand";
 import { navigation } from "@/data/navigation";
-import { ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { useUI } from "@/components/UIProvider";
 import { useCart } from "@/components/cart/CartProvider";
 import { BarsIcon, CloseIcon, FavoritesIcon, SearchIcon, ShoppingBagIcon, UserIcon } from "@/components/ui/Icons";
@@ -40,15 +39,14 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
 
-  // `Header--Scrolled` after 25px, same threshold as the theme.
-  useGSAP(() => {
-    const st = ScrollTrigger.create({
-      start: 25,
-      end: "max",
-      onToggle: (self) => setScrolled(self.isActive),
-    });
-    return () => st.kill();
-  });
+  // `Header--Scrolled` after 25px, same threshold as the theme. A plain scroll
+  // check: ScrollTrigger's cached `end: "max"` went stale when pages grew after load.
+  useEffect(() => {
+    const update = () => setScrolled(window.scrollY >= 25);
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
+  }, []);
 
   const menuOpen = drawer === "menu";
 
