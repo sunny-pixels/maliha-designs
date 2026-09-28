@@ -1,0 +1,45 @@
+/*
+ * Colour-switch crossfade (see src/lib/transitions.ts).
+ *
+ * During a `colour-change` view transition the page root is taken out of the
+ * snapshot: only the swapped regions (named <ViewTransition>s with the
+ * `colour-fade` class) crossfade, and everything else — header, other cards,
+ * the liquid-glass cursor — keeps rendering live instead of freezing as a
+ * still image for the length of the transition.
+ *
+ * Old and new are a shared pair, so the browser blends them with
+ * `plus-lighter` inside the image pair: a true crossfade with no dip in
+ * opacity halfway through.
+ */
+html:active-view-transition-type(colour-change) {
+  view-transition-name: none;
+}
+
+::view-transition-group(.colour-fade),
+::view-transition-old(.colour-fade),
+::view-transition-new(.colour-fade) {
+  animation-duration: 400ms;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* A slight blur mid-way softens the swap into a morph (the Next.js guide's
+   `via-blur` recipe): it hides the pixel-level differences between the two
+   photos while they overlap, then resolves to the sharp new colour. */
+::view-transition-image-pair(.colour-fade) {
+  animation: colour-fade-blur 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes colour-fade-blur {
+  40% {
+    filter: blur(3px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-image-pair(.colour-fade),
+  ::view-transition-group(.colour-fade),
+  ::view-transition-old(.colour-fade),
+  ::view-transition-new(.colour-fade) {
+    animation: none;
+  }
+}

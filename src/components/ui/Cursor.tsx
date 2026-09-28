@@ -22,8 +22,7 @@ export function Cursor() {
         outline="rgba(0, 0, 0, 0.3)"
         outlineWidth={1}
         hideCursor
-        motion={{ follow: 20, bounce: 0.3, stretch: 70 }}
-      />
+        motion={{ follow: 20, bounce: 0.3, stretch: 70 }}      />
       {/* Inner dot — commented out for now so the outer ring can be seen on its own.
       <LiquidGlassCursor
         scope="page"

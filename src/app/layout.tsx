@@ -21,6 +21,9 @@ import "@/styles/theme/section-product_carousel.css";
 import "@/styles/theme/section-lookbook.css";
 import "@/styles/theme/main-footer.css";
 import "@/styles/theme/inline.css";
+// Base UI component animations — must follow the theme CSS it overrides.
+import "@/styles/base-ui.css";
+import "@/styles/transitions.css";
 
 import { UIProvider } from "@/components/UIProvider";
 import { CartProvider } from "@/components/cart/CartProvider";

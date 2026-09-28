@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "@/components/ui/SiteLink";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, ViewTransition } from "react";
 import { useUI } from "@/components/UIProvider";
 import { useCart } from "@/components/cart/CartProvider";
 import { formatPrice, type Product } from "@/data/products";
+import { colourFade } from "@/lib/transitions";
 import { ImageZoom } from "./ImageZoom";
 import { ProductGallery } from "./ProductGallery";
 import { AtcText, Breadcrumbs, ProductInfo, type AtcState } from "./ProductInfo";
@@ -101,6 +102,10 @@ export function ProductModule({ product, pairs }: Props) {
   const moduleRef = useRef<HTMLElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
   const timers = useRef<number[]>([]);
+  // A colour swatch being hovered: the gallery and title show it until the
+  // pointer leaves the swatches (see ColourSwatches).
+  const [preview, setPreview] = useState<Product | null>(null);
+  const shown = preview ?? product;
 
   const [size, setSize] = useState<string | null>(null);
   const [atcState, setAtcState] = useState<AtcState>("select-size");
@@ -154,12 +159,15 @@ export function ProductModule({ product, pairs }: Props) {
           <div className="not_desktop">
             <Breadcrumbs product={product} />
           </div>
-          <ProductGallery
-            product={product}
-            favorite={favorite}
-            onToggleFavorite={() => setFavorite((v) => !v)}
-            onZoom={setZoomIndex}
-          />
+          {/* Keyed on the shown colour, so a swatch-hover preview crossfades. */}
+          <ViewTransition key={shown.slug} name="pdp-gallery" share={colourFade} enter={colourFade} default="none">
+            <ProductGallery
+              product={shown}
+              favorite={favorite}
+              onToggleFavorite={() => setFavorite((v) => !v)}
+              onZoom={setZoomIndex}
+            />
+          </ViewTransition>
           <div ref={innerRef} className="pm__content-inner">
             <ProductInfo
               product={product}
@@ -170,6 +178,8 @@ export function ProductModule({ product, pairs }: Props) {
               onAdd={addToBag}
               favorite={favorite}
               onToggleFavorite={() => setFavorite((v) => !v)}
+              shown={shown}
+              onPreview={setPreview}
             />
           </div>
         </div>

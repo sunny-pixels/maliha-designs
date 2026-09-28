@@ -1,12 +1,18 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { gsap } from "@/lib/gsap";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 export type DrawerName = "menu" | "search" | "cart" | "country";
 
 type UIContextValue = {
   drawer: DrawerName | null;
+  /**
+   * True when one drawer replaced another directly (e.g. cart → search).
+   * Each drawer is its own Base UI Dialog with its own backdrop, so
+   * `SiteDrawer` swaps the two backdrops instantly in that case — the page
+   * overlay then stays at a steady 40%, as the single shared overlay did.
+   */
+  switching: boolean;
   openDrawer: (name: DrawerName) => void;
   toggleDrawer: (name: DrawerName) => void;
   closeDrawer: () => void;
@@ -20,43 +26,34 @@ export function useUI() {
   return ctx;
 }
 
+type DrawerState = { drawer: DrawerName | null; switching: boolean };
+
+const next = (cur: DrawerState, drawer: DrawerName | null): DrawerState => ({
+  drawer,
+  switching: cur.drawer !== null && drawer !== null && cur.drawer !== drawer,
+});
+
 /**
- * Holds which drawer is open, drives the page overlay, locks scrolling and
- * keeps the layout CSS variables the theme JS used to maintain
- * (--announcement-dynamic-height, --header-dynamic-height, --viewport-height).
+ * Holds which drawer is open, locks scrolling and keeps the layout CSS
+ * variables the theme JS used to maintain (--announcement-dynamic-height,
+ * --header-dynamic-height, --viewport-height). The drawers and their
+ * overlay are Base UI Dialogs (see SiteDrawer).
  */
 export function UIProvider({ children }: { children: React.ReactNode }) {
-  const [drawer, setDrawer] = useState<DrawerName | null>(null);
-  const overlayRef = useRef<HTMLDivElement>(null);
+  const [state, setState] = useState<DrawerState>({ drawer: null, switching: false });
+  const { drawer, switching } = state;
 
-  const openDrawer = useCallback((name: DrawerName) => setDrawer(name), []);
-  const closeDrawer = useCallback(() => setDrawer(null), []);
-  const toggleDrawer = useCallback((name: DrawerName) => setDrawer((cur) => (cur === name ? null : name)), []);
+  const openDrawer = useCallback((name: DrawerName) => setState((cur) => next(cur, name)), []);
+  const closeDrawer = useCallback(() => setState((cur) => next(cur, null)), []);
+  const toggleDrawer = useCallback(
+    (name: DrawerName) => setState((cur) => next(cur, cur.drawer === name ? null : name)),
+    [],
+  );
 
-  // Overlay fade + scroll lock + Escape to close.
+  // Scroll lock. The dialogs use `modal="trap-focus"` (so the header stays
+  // clickable), which doesn't lock scrolling on its own.
   useEffect(() => {
-    const overlay = overlayRef.current;
-    if (!overlay) return;
-    const open = drawer !== null;
-
-    gsap.killTweensOf(overlay);
-    if (open) {
-      gsap.set(overlay, { display: "block" });
-      gsap.to(overlay, { opacity: 0.4, duration: 0.3, ease: "power1.inOut" });
-    } else {
-      gsap.to(overlay, {
-        opacity: 0,
-        duration: 0.3,
-        ease: "power1.inOut",
-        onComplete: () => gsap.set(overlay, { display: "none" }),
-      });
-    }
-
-    document.documentElement.style.overflow = open ? "hidden" : "";
-
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setDrawer(null);
-    if (open) window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    document.documentElement.style.overflow = drawer !== null ? "hidden" : "";
   }, [drawer]);
 
   // Layout variables used by drawer positioning.
@@ -80,14 +77,9 @@ export function UIProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const value = useMemo(
-    () => ({ drawer, openDrawer, toggleDrawer, closeDrawer }),
-    [drawer, openDrawer, toggleDrawer, closeDrawer],
+    () => ({ drawer, switching, openDrawer, toggleDrawer, closeDrawer }),
+    [drawer, switching, openDrawer, toggleDrawer, closeDrawer],
   );
 
-  return (
-    <UIContext.Provider value={value}>
-      <div className="pageOverlay" ref={overlayRef} onClick={closeDrawer} />
-      {children}
-    </UIContext.Provider>
-  );
+  return <UIContext.Provider value={value}>{children}</UIContext.Provider>;
 }

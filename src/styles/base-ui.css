@@ -1,0 +1,110 @@
+/*
+ * Animations for the Base UI components (Dialog drawers + backdrop,
+ * Collapsible dropdowns), per https://base-ui.com/react/handbook/animation:
+ * CSS transitions between the resting state and `[data-starting-style]` /
+ * `[data-ending-style]`. Timings and easings match the GSAP tweens these
+ * replace, so nothing looks different:
+ *   drawers   — 300ms slide 106% + fade; power2.out opening, power2.in closing
+ *   backdrop  — 300ms fade to 40%; power1.inOut
+ *   dropdowns — 250ms height; power1.inOut
+ * Selectors are deliberately specific: the theme CSS also styles these
+ * elements by `aria-expanded` / `aria-hidden`, and those rules must not
+ * hide a drawer or dropdown mid-animation.
+ */
+
+/* ---------- Drawers (SiteDrawer → Dialog.Popup) ---------- */
+
+body .Drawer--wrapper.site-drawer.site-drawer {
+  display: block;
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(0);
+  transition:
+    transform 0.3s cubic-bezier(0.33, 1, 0.68, 1),
+    opacity 0.3s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+/* Closing: the theme's `[aria-expanded=false]` rules would hide it at once. */
+body .Drawer--wrapper.site-drawer.site-drawer[aria-expanded="false"] {
+  visibility: visible;
+  pointer-events: none;
+}
+
+body .Drawer--wrapper.site-drawer--right.site-drawer[data-starting-style],
+body .Drawer--wrapper.site-drawer--right.site-drawer[data-ending-style] {
+  transform: translateX(106%);
+  opacity: 0;
+}
+
+body .Drawer--wrapper.site-drawer--left.site-drawer[data-starting-style],
+body .Drawer--wrapper.site-drawer--left.site-drawer[data-ending-style] {
+  transform: translateX(-106%);
+  opacity: 0;
+}
+
+body .Drawer--wrapper.site-drawer.site-drawer[data-ending-style] {
+  transition-timing-function: cubic-bezier(0.32, 0, 0.67, 0);
+}
+
+/* The country drawer's own theme rules are ID-scoped, so these need the ID. */
+#modal-country.country-selector-drawer.Drawer--Right.site-drawer {
+  transform: translateX(0);
+  opacity: 1;
+  transition:
+    transform 0.3s cubic-bezier(0.33, 1, 0.68, 1),
+    opacity 0.3s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+#modal-country.country-selector-drawer.Drawer--Right.site-drawer[data-starting-style],
+#modal-country.country-selector-drawer.Drawer--Right.site-drawer[data-ending-style] {
+  transform: translateX(106%);
+  opacity: 0;
+}
+
+#modal-country.country-selector-drawer.Drawer--Right.site-drawer[data-ending-style] {
+  transition-timing-function: cubic-bezier(0.32, 0, 0.67, 0);
+}
+
+/* ---------- Page overlay (Dialog.Backdrop) ---------- */
+
+.pageOverlay.site-backdrop {
+  display: block;
+  opacity: 0.4;
+  transition: opacity 0.3s cubic-bezier(0.45, 0, 0.55, 1);
+}
+
+.pageOverlay.site-backdrop[data-starting-style],
+.pageOverlay.site-backdrop[data-ending-style] {
+  opacity: 0;
+}
+
+/* One drawer replacing another: swap the two backdrops without a dip. */
+.pageOverlay.site-backdrop.site-backdrop--instant {
+  transition: none;
+}
+
+/* ---------- Dropdowns (Collapsible.Panel) ---------- */
+
+.Dropdown--Content.site-collapse.site-collapse {
+  display: block;
+  visibility: visible;
+  height: var(--collapsible-panel-height);
+  overflow: hidden;
+  transition: height 0.25s cubic-bezier(0.45, 0, 0.55, 1);
+}
+
+.Dropdown--Content.site-collapse.site-collapse[data-starting-style],
+.Dropdown--Content.site-collapse.site-collapse[data-ending-style] {
+  height: 0;
+}
+
+.Dropdown--Content.site-collapse.site-collapse[hidden] {
+  display: none;
+}
+
+/* Desktop footer: the theme forces every column open. */
+@media screen and (min-width: 1025px) {
+  .footer .Dropdown--Content.site-collapse.site-collapse[hidden] {
+    display: block;
+  }
+}

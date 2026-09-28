@@ -8,7 +8,8 @@ import { navigation, type NavCard } from "@/data/navigation";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { blurProps } from "@/lib/images";
 import { useUI } from "@/components/UIProvider";
-import { useDrawerAnimation } from "@/components/drawers/useDrawerAnimation";
+import { Collapsible } from "@base-ui/react/collapsible";
+import { SiteDrawer } from "@/components/drawers/SiteDrawer";
 import { ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon } from "@/components/ui/Icons";
 import { TertiaryButton } from "@/components/ui/TertiaryButton";
 
@@ -29,16 +30,13 @@ function CollectionLinks({ cards, multi }: { cards: NavCard[]; multi?: boolean }
 }
 
 export function MobileMenu() {
-  const { drawer, closeDrawer } = useUI();
-  const open = drawer === "menu";
-  const ref = useDrawerAnimation<HTMLElement>(open, "left");
+  const { closeDrawer } = useUI();
 
   const [tab, setTab] = useState(navigation[0].key);
   const [sub, setSub] = useState<string | null>(null);
   const [direction, setDirection] = useState<1 | -1>(1);
   const [contactOpen, setContactOpen] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
-  const contactRef = useRef<HTMLDivElement>(null);
 
   const menu = navigation.find((m) => m.key === tab)!;
   const second = menu.second.find((s) => s.key === sub) ?? null;
@@ -61,25 +59,14 @@ export function MobileMenu() {
     { dependencies: [tab, sub], scope: contentRef },
   );
 
-  // Contact accordion.
-  useGSAP(
-    () => {
-      const el = contactRef.current;
-      if (!el) return;
-      gsap.to(el, { height: contactOpen ? "auto" : 0, duration: 0.25, ease: "power1.inOut" });
-    },
-    { dependencies: [contactOpen, tab] },
-  );
-
   return (
-    <div className="shopify-section">
-      <mobile-menu
-        ref={ref}
-        className="Drawer--wrapper Drawer--Left colorGroup--primary"
-        id="mobile-menu-drawer"
-        aria-expanded={open}
-        style={{ display: "none" }}
-      >
+    <SiteDrawer
+      name="menu"
+      side="left"
+      render={<mobile-menu />}
+      id="mobile-menu-drawer"
+      className="Drawer--wrapper Drawer--Left colorGroup--primary"
+    >
         <div className="mobile-menu__content">
           <div className="Drawer--Content" ref={contentRef}>
             <div className="mobile-menu__link-header" aria-hidden={level > 1}>
@@ -144,24 +131,18 @@ export function MobileMenu() {
                   )}
                 </div>
                 <CollectionLinks cards={menu.mobileRootCards} multi={menu.mobileRootCards.length > 1} />
-                <div className="Dropdown mobile-menu__contact-info-dropdown">
-                  <button
-                    type="button"
-                    className="Dropdown--Button mobile-menu__contact-info-button"
-                    aria-expanded={contactOpen}
-                    onClick={() => setContactOpen((v) => !v)}
-                  >
+                <Collapsible.Root
+                  className="Dropdown mobile-menu__contact-info-dropdown"
+                  open={contactOpen}
+                  onOpenChange={setContactOpen}
+                >
+                  <Collapsible.Trigger className="Dropdown--Button mobile-menu__contact-info-button">
                     <span className="u-p2">Contact</span>
                     <span className="mobile-menu__contact-info-icon">
                       <ArrowDownIcon />
                     </span>
-                  </button>
-                  <div
-                    ref={contactRef}
-                    className="Dropdown--Content mobile-menu__contact-info-content"
-                    aria-hidden={!contactOpen}
-                    style={{ height: 0, visibility: "visible" }}
-                  >
+                  </Collapsible.Trigger>
+                  <Collapsible.Panel keepMounted className="Dropdown--Content mobile-menu__contact-info-content site-collapse">
                     <div className="rte u-p2">
                       <p>
                         Email: {brand.email}
@@ -171,8 +152,8 @@ export function MobileMenu() {
                         Address: {brand.address}
                       </p>
                     </div>
-                  </div>
-                </div>
+                  </Collapsible.Panel>
+                </Collapsible.Root>
                 <Link className="mobile-menu__favorites-link u-p2" href="/pages/favorites" onClick={closeDrawer}>
                   <span className="mobile-menu__favorites-label">Favorites</span>
                   <span className="mobile-menu__favorites-count"></span>
@@ -202,7 +183,6 @@ export function MobileMenu() {
             </div>
           </div>
         </div>
-      </mobile-menu>
-    </div>
+    </SiteDrawer>
   );
 }

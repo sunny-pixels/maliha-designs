@@ -2,58 +2,28 @@
 
 import Image from "next/image";
 import Link from "@/components/ui/SiteLink";
-import { useRef, useState } from "react";
 import { brand } from "@/config/brand";
 import { footerColumns, legalLinks, type FooterColumn } from "@/data/footer";
-import { gsap, useGSAP } from "@/lib/gsap";
+import { Collapsible } from "@base-ui/react/collapsible";
 import { useUI } from "@/components/UIProvider";
 import { ArrowDownIcon } from "@/components/ui/Icons";
 
 const adj = (m: number, d: number) => ({ "--adjustment_m": `${m}px`, "--adjustment_d": `${d}px` }) as React.CSSProperties;
 
-/** Mobile accordion; on desktop the theme CSS forces every column open. */
+/**
+ * Mobile accordion (Base UI Collapsible); on desktop the theme CSS forces
+ * every column open, so the panel stays mounted (see base-ui.css).
+ */
 function FooterDropdown({ column }: { column: FooterColumn }) {
-  const [open, setOpen] = useState(false);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const first = useRef(true);
-
-  useGSAP(
-    () => {
-      const el = contentRef.current;
-      if (!el) return;
-      if (first.current) {
-        first.current = false;
-        return;
-      }
-      gsap.killTweensOf(el);
-      if (open) {
-        gsap.fromTo(el, { height: 0 }, { height: "auto", visibility: "visible", duration: 0.25, ease: "power1.inOut" });
-      } else {
-        gsap.to(el, {
-          height: 0,
-          duration: 0.25,
-          ease: "power1.inOut",
-          onComplete: () => gsap.set(el, { clearProps: "visibility,height" }),
-        });
-      }
-    },
-    { dependencies: [open] },
-  );
-
   return (
-    <div className="Dropdown Dropdown--Animate custom__dropdown">
-      <button
-        type="button"
-        className="Dropdown--Button custom__dropdown-button"
-        aria-expanded={open}
-        onClick={() => setOpen((v) => !v)}
-      >
+    <Collapsible.Root className="Dropdown Dropdown--Animate custom__dropdown">
+      <Collapsible.Trigger className="Dropdown--Button custom__dropdown-button">
         <span className="custom__dropdown-heading u-p2">{column.heading}</span>
         <span className="custom__dropdown-arrow not_desktop">
           <ArrowDownIcon />
         </span>
-      </button>
-      <div ref={contentRef} className="Dropdown--Content custom__dropdown-content" aria-hidden={!open}>
+      </Collapsible.Trigger>
+      <Collapsible.Panel keepMounted className="Dropdown--Content custom__dropdown-content site-collapse">
         <div className="custom__dropdown-inner-content">
           {column.links.map((l) => (
             <Link key={l.label} className="u-p2 hover-link link-underline" href={l.href}>
@@ -74,8 +44,8 @@ function FooterDropdown({ column }: { column: FooterColumn }) {
             </div>
           )}
         </div>
-      </div>
-    </div>
+      </Collapsible.Panel>
+    </Collapsible.Root>
   );
 }
 

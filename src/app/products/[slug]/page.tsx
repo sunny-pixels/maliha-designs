@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import { ViewTransition } from "react";
 import { notFound } from "next/navigation";
 import { ProductCarousel } from "@/components/product/ProductCarousel";
 import { ProductModule } from "@/components/product/ProductModule";
 import { RecentlyViewed } from "@/components/product/RecentlyViewed";
 import { allProducts, getProduct, pairedProducts, productHref, relatedProducts } from "@/data/products";
 import { shareMetadata, siteUrl } from "@/lib/seo";
+import { colourFade } from "@/lib/transitions";
 
 // Product-page stylesheets from the reference template (the rest load in the layout).
 import "@/styles/theme/breadcrumbs.css";
@@ -64,16 +66,21 @@ export default async function ProductPage({ params }: Params) {
   return (
     <main id="MainContent" className="content-for-layout">
       <div className="shopify-section product__module">
-        {/* Keyed so switching colour (another slug, same route) starts with fresh state. */}
-        <ProductModule key={product.slug} product={product} pairs={pairedProducts(product, 4)} />
+        {/* Keyed so switching colour (another slug, same route) starts with fresh
+            state, and crossfades old → new colour (colour-change transitions only). */}
+        <ViewTransition key={product.slug} name="pdp-module" share={colourFade} enter={colourFade} default="none">
+          <ProductModule product={product} pairs={pairedProducts(product, 4)} />
+        </ViewTransition>
       </div>
 
-      <ProductCarousel
-        heading="You may also like"
-        products={relatedProducts(product, 6)}
-        desktopPerView={3}
-        padding={{ m: [20, 20, 0], d: [40, 40, 40] }}
-      />
+      <ViewTransition key={product.slug} name="pdp-related" share={colourFade} enter={colourFade} default="none">
+        <ProductCarousel
+          heading="You may also like"
+          products={relatedProducts(product, 6)}
+          desktopPerView={3}
+          padding={{ m: [20, 20, 0], d: [40, 40, 40] }}
+        />
+      </ViewTransition>
 
       <RecentlyViewed current={product.slug} />
 

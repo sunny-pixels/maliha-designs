@@ -2,13 +2,15 @@
 
 import Image from "next/image";
 import Link from "@/components/ui/SiteLink";
-import { useEffect, useId, useRef, useState } from "react";
+import { addTransitionType, startTransition, useEffect, useId, useRef, useState, ViewTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Mousewheel } from "swiper/modules";
-import { colorVariants, formatPrice, productHref, type Product } from "@/data/products";
+import { colorVariants, formatPrice, pairedProducts, productHref, type Product } from "@/data/products";
 import { blurProps, QUALITY } from "@/lib/images";
-import { gsap, useGSAP } from "@/lib/gsap";
+import { Collapsible } from "@base-ui/react/collapsible";
+import { COLOUR_CHANGE, colourFade } from "@/lib/transitions";
+import { preloadImages } from "@/lib/preloadImages";
 import { ArrowDownIcon, ArrowRightIcon, CheckIcon, SizeIcon } from "@/components/ui/Icons";
 import { FavoriteButton } from "./FavoriteButton";
 
@@ -79,7 +81,7 @@ export function Breadcrumbs({ product }: { product: Product }) {
  * opens that colour's page, keeping the scroll position (as the theme swaps
  * the product in place); otherwise the product's colours are shown only.
  */
-function ColourSwatches({ product }: { product: Product }) {
+function ColourSwatches({ product, onPreview }: { product: Product; onPreview: (v: Product | null) => void }) {
   const id = useId();
   const router = useRouter();
   const variants = colorVariants(product);
@@ -88,13 +90,60 @@ function ColourSwatches({ product }: { product: Product }) {
     variants.forEach((v) => v.slug !== product.slug && router.prefetch(productHref(v.slug)));
   }, [variants, product.slug, router]);
 
+  // The first two photos, as ProductGallery renders them (hero, then tile quality).
+  // The images that change with the colour, as rendered: the first two
+  // gallery photos (hero, then tile quality) and the "Pair it with" tiles,
+  // which are picked per product.
+  const galleryImages = (slug: string) => {
+    const v = variants.find((x) => x.slug === slug);
+    if (!v) return [];
+    return [
+      ...v.images
+        .slice(0, 2)
+        .map((src, i) => ({ src, sizes: "(min-width: 1025px) 50vw, 100vw", quality: i === 0 ? QUALITY.hero : QUALITY.tile })),
+      ...pairedProducts(v, 4).map((p) => ({ src: p.images[0], sizes: "(min-width: 1025px) 120px, 25vw", quality: QUALITY.tile })),
+    ];
+  };
+
+  // Load the new colour's photos before navigating, so the crossfade blends
+  // photo into photo instead of into a placeholder (see preloadImages).
+  // A token drops stale work: sweeping across swatches only previews the one
+  // the pointer rests on, and a click cancels any pending preview.
+  const latest = useRef(0);
+  const switchTo = async (slug: string) => {
+    ++latest.current;
+    await preloadImages(galleryImages(slug));
+    router.push(productHref(slug), { scroll: false, transitionTypes: [COLOUR_CHANGE] });
+  };
+
+  // Hover (mouse only — a tap is a click): crossfade the gallery and title to
+  // that colour without leaving the page; leaving the swatches reverts.
+  const preview = (v: Product | null) =>
+    startTransition(() => {
+      addTransitionType(COLOUR_CHANGE);
+      onPreview(v);
+    });
+  const previewColour = async (slug: string | null, e: React.PointerEvent) => {
+    if (e.pointerType !== "mouse" || !slug) return;
+    const t = ++latest.current;
+    const v = variants.find((x) => x.slug === slug);
+    if (!v) return;
+    if (v.slug !== product.slug) await preloadImages(galleryImages(slug));
+    if (t !== latest.current) return;
+    preview(v.slug === product.slug ? null : v);
+  };
+  const endPreview = () => {
+    ++latest.current;
+    preview(null);
+  };
+
   const swatches =
     variants.length > 1
       ? variants.map((v) => ({ key: v.slug, colour: v.colors[0], current: v.slug === product.slug, slug: v.slug }))
       : product.colors.map((c, i) => ({ key: c.name, colour: c, current: i === 0, slug: null }));
 
   return (
-    <div className="pc__color-wrapper" role="radiogroup" aria-label="Colour">
+    <div className="pc__color-wrapper" role="radiogroup" aria-label="Colour" onPointerLeave={endPreview}>
       {swatches.map((s, i) => (
         <div key={s.key} className="pc__color-selector">
           <input
@@ -105,13 +154,14 @@ function ColourSwatches({ product }: { product: Product }) {
             checked={s.current}
             // Colours without their own page can't be chosen yet.
             disabled={!s.current && !s.slug}
-            onChange={() => s.slug && router.push(productHref(s.slug), { scroll: false })}
+            onChange={() => s.slug && switchTo(s.slug)}
           />
           <label
             htmlFor={`${id}-color-${i}`}
             className="pc__color-selector-label"
             style={{ "--pc__color": s.colour.hex } as React.CSSProperties}
             title={s.colour.name}
+            onPointerEnter={(e) => previewColour(s.slug, e)}
           >
             <span className="VisuallyHidden">{s.colour.name}</span>
           </label>
@@ -122,6 +172,7 @@ function ColourSwatches({ product }: { product: Product }) {
 }
 
 /** One `pm__faq-dropdown`, height-animated like the footer accordions. */
+/** Single-open FAQ item as a Base UI Collapsible; which one is open is controlled by the parent. */
 function FaqDropdown({
   label,
   open,
@@ -133,44 +184,18 @@ function FaqDropdown({
   onToggle: () => void;
   children: React.ReactNode;
 }) {
-  const contentRef = useRef<HTMLDivElement>(null);
-  const first = useRef(true);
-
-  useGSAP(
-    () => {
-      const el = contentRef.current;
-      if (!el) return;
-      if (first.current) {
-        first.current = false;
-        return;
-      }
-      gsap.killTweensOf(el);
-      if (open) {
-        gsap.fromTo(el, { height: 0 }, { height: "auto", duration: 0.25, ease: "power1.inOut", clearProps: "height" });
-      } else {
-        // The closed CSS state hides the content at once; keep it visible while it collapses.
-        gsap.fromTo(
-          el,
-          { height: el.scrollHeight, visibility: "visible" },
-          { height: 0, duration: 0.25, ease: "power1.inOut", clearProps: "height,visibility" },
-        );
-      }
-    },
-    { dependencies: [open] },
-  );
-
   return (
-    <div className="Dropdown Dropdown--Animate pm__dropdown pm__faq-dropdown">
-      <button type="button" className="Dropdown--Button pm__faq-dropdown-button" aria-expanded={open} onClick={onToggle}>
+    <Collapsible.Root className="Dropdown Dropdown--Animate pm__dropdown pm__faq-dropdown" open={open} onOpenChange={onToggle}>
+      <Collapsible.Trigger className="Dropdown--Button pm__faq-dropdown-button">
         <span className="Dropdown--Arrow" aria-hidden="true">
           <ArrowDownIcon />
         </span>
         <span className="u-s2">{label}</span>
-      </button>
-      <div ref={contentRef} className="Dropdown--Content pm__faq-dropdown-content" aria-hidden={!open}>
+      </Collapsible.Trigger>
+      <Collapsible.Panel keepMounted className="Dropdown--Content pm__faq-dropdown-content site-collapse">
         <div className="DropdownContent__Inner pm__faq-dropdown-inner">{children}</div>
-      </div>
-    </div>
+      </Collapsible.Panel>
+    </Collapsible.Root>
   );
 }
 
@@ -245,10 +270,13 @@ type Props = {
   onAdd: () => void;
   favorite: boolean;
   onToggleFavorite: () => void;
+  /** The colour being previewed (swatch hover), shown in the title and price. */
+  shown: Product;
+  onPreview: (v: Product | null) => void;
 };
 
 /** `.pm__information`: the sticky right-hand column of the product module. */
-export function ProductInfo({ product, pairs, size, onSize, atcState, onAdd, favorite, onToggleFavorite }: Props) {
+export function ProductInfo({ product, pairs, size, onSize, atcState, onAdd, favorite, onToggleFavorite, shown, onPreview }: Props) {
   const id = useId();
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const toggleFaq = (i: number) => setOpenFaq((cur) => (cur === i ? null : i));
@@ -264,12 +292,14 @@ export function ProductInfo({ product, pairs, size, onSize, atcState, onAdd, fav
         </div>
 
         <div className="pm__title" data-pm-sticky="">
-          <div className="pm__title-meta">
-            <h1 className="u-h2 pm__product-title">{product.name}</h1>
-          </div>
+          <ViewTransition key={shown.slug} name="pdp-title" share={colourFade} enter={colourFade} default="none">
+            <div className="pm__title-meta">
+              <h1 className="u-h2 pm__product-title">{shown.name}</h1>
+            </div>
+          </ViewTransition>
           <div className="ProductInfo--Prices" aria-live="polite" aria-atomic="true">
             <div className="pc__price-wrapper pm__price-wrapper">
-              <span className="price-item price-item--regular u-h2">{formatPrice(product.price)}</span>
+              <span className="price-item price-item--regular u-h2">{formatPrice(shown.price)}</span>
             </div>
           </div>
         </div>
@@ -277,7 +307,7 @@ export function ProductInfo({ product, pairs, size, onSize, atcState, onAdd, fav
         <div className="pm__lowest-price-stock-wrapper" data-pm-hidden="" />
 
         <div className="quick-add__colors-wrapper" data-pm-sticky="">
-          <ColourSwatches product={product} />
+          <ColourSwatches product={product} onPreview={onPreview} />
         </div>
 
         <div className="pm__size-guide-fit-wrapper" data-pm-sticky="" id={`${id}-sizes`}>

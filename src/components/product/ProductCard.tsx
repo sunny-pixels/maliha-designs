@@ -2,7 +2,9 @@
 
 import Image from "next/image";
 import Link from "@/components/ui/SiteLink";
-import { useId, useState } from "react";
+import { addTransitionType, startTransition, useId, useRef, useState, ViewTransition } from "react";
+import { COLOUR_CHANGE, colourFade } from "@/lib/transitions";
+import { preloadImages } from "@/lib/preloadImages";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperType } from "swiper";
 import { colorVariants, formatPrice, productHref, type Product } from "@/data/products";
@@ -44,7 +46,11 @@ function Sizes({ product }: { product: Product }) {
  */
 export function ProductCard({ product: initial, sizes = "(min-width: 1025px) 25vw, 80vw" }: { product: Product; sizes?: string }) {
   const id = useId();
-  const [product, setProduct] = useState(initial);
+  // `chosen` is the committed colour; `preview` is a swatch being hovered.
+  // The card shows — and links to — the preview while there is one.
+  const [chosen, setChosen] = useState(initial);
+  const [preview, setPreview] = useState<Product | null>(null);
+  const product = preview ?? chosen;
   const variants = colorVariants(initial);
   const [swiper, setSwiper] = useState<SwiperType | null>(null);
   const [slide, setSlide] = useState(0);
@@ -56,9 +62,49 @@ export function ProductCard({ product: initial, sizes = "(min-width: 1025px) 25v
   const arm = () => setArmed(true);
   const multi = product.images.length > 1;
 
-  const showColour = (v: Product) => {
-    setProduct(v);
-    setSlide(0);
+  // View-transition names must be CSS idents; useId() isn't.
+  const vt = id.replace(/[^a-zA-Z0-9_-]/g, "");
+
+  // The card's first photo, exactly as rendered below.
+  const cardImage = (v: Product) => [{ src: v.images[0], sizes, quality: QUALITY.tile }];
+
+  // Every colour swap is a Transition tagged "colour-change", so the
+  // <ViewTransition>s below crossfade old → new (see src/lib/transitions.ts).
+  // The new photo is loaded first so the crossfade blends photo into photo,
+  // not into a placeholder (see preloadImages). A token drops stale hovers:
+  // sweeping across swatches only previews the one the pointer rests on.
+  const latest = useRef(0);
+  const crossfade = (update: () => void) =>
+    startTransition(() => {
+      addTransitionType(COLOUR_CHANGE);
+      update();
+      setSlide(0);
+    });
+
+  // Click: commit the colour.
+  const showColour = async (v: Product) => {
+    const t = ++latest.current;
+    await preloadImages(cardImage(v));
+    if (t !== latest.current) return;
+    crossfade(() => {
+      setChosen(v);
+      setPreview(null);
+    });
+  };
+
+  // Hover (mouse only — a tap is a click): preview the colour.
+  const previewColour = async (v: Product, e: React.PointerEvent) => {
+    if (e.pointerType !== "mouse") return;
+    const t = ++latest.current;
+    await preloadImages(cardImage(v));
+    if (t !== latest.current) return;
+    crossfade(() => setPreview(v.slug === chosen.slug ? null : v));
+  };
+
+  // Leaving the card: back to the chosen colour.
+  const endPreview = () => {
+    latest.current++;
+    if (preview) crossfade(() => setPreview(null));
   };
 
   const step = (e: React.MouseEvent, dir: -1 | 1) => {
@@ -74,6 +120,7 @@ export function ProductCard({ product: initial, sizes = "(min-width: 1025px) 25v
         className="colorGroup--primary"
         style={{ "--aspect-ratio": "4/5", height: "100%", position: "relative" } as React.CSSProperties}
         onPointerEnter={arm}
+        onPointerLeave={endPreview}
         onTouchStart={arm}
         onFocus={arm}
       >
@@ -97,7 +144,7 @@ export function ProductCard({ product: initial, sizes = "(min-width: 1025px) 25v
                           className="pc__color-checkbox VisuallyHidden"
                           name={`product-color-${id}`}
                           id={`${id}-color-${i}`}
-                          checked={v.slug === product.slug}
+                          checked={v.slug === chosen.slug}
                           onChange={() => showColour(v)}
                         />
                         <label
@@ -105,6 +152,7 @@ export function ProductCard({ product: initial, sizes = "(min-width: 1025px) 25v
                           className="pc__color-selector-label"
                           style={{ "--pc__color": v.colors[0].hex } as React.CSSProperties}
                           title={v.colors[0].name}
+                          onPointerEnter={(e) => previewColour(v, e)}
                           // Inside the card link: switch colour instead of opening the page.
                           onClick={(e) => {
                             e.preventDefault();
@@ -140,6 +188,7 @@ export function ProductCard({ product: initial, sizes = "(min-width: 1025px) 25v
               </div>
             </div>
 
+            <ViewTransition key={product.slug} name={`pc-img-${vt}`} share={colourFade} enter={colourFade} default="none">
             <Swiper
               key={product.slug}
               className="pc__image__swiper"
@@ -202,8 +251,10 @@ export function ProductCard({ product: initial, sizes = "(min-width: 1025px) 25v
                 </>
               )}
             </Swiper>
+            </ViewTransition>
           </div>
 
+          <ViewTransition key={product.slug} name={`pc-info-${vt}`} share={colourFade} enter={colourFade} default="none">
           <div className="pc__information mt-m">
             <div className="pc__information__meta">
               <div className="pm__information__meta--top">
@@ -239,6 +290,7 @@ export function ProductCard({ product: initial, sizes = "(min-width: 1025px) 25v
               </div>
             </div>
           </div>
+          </ViewTransition>
         </Link>
         <button
           type="button"

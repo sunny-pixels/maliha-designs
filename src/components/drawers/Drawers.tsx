@@ -2,34 +2,29 @@
 
 import Image from "next/image";
 import Link from "@/components/ui/SiteLink";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useUI } from "@/components/UIProvider";
 import { MAX_QTY, useCart } from "@/components/cart/CartProvider";
 import { formatPrice, productHref } from "@/data/products";
 import { blurProps, QUALITY } from "@/lib/images";
 import { ArrowDownIcon, CloseIcon, MinusIcon, PlusIcon, SearchIcon } from "@/components/ui/Icons";
-import { useDrawerAnimation } from "./useDrawerAnimation";
+import { SiteDrawer } from "./SiteDrawer";
 
 const suggestions = ["Kurta sets", "Lehengas", "Dupattas"];
 
 export function SearchDrawer() {
-  const { drawer, closeDrawer } = useUI();
-  const open = drawer === "search";
-  const ref = useDrawerAnimation<HTMLElement>(open, "right");
+  const { closeDrawer } = useUI();
   const inputRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState("");
 
-  useEffect(() => {
-    if (open) inputRef.current?.focus();
-  }, [open]);
-
   return (
-    <search-bar
-      ref={ref}
+    <SiteDrawer
+      name="search"
+      side="right"
+      render={<search-bar />}
       id="search-drawer"
       className="search-drawer Drawer--wrapper Drawer--Right colorGroup--primary"
-      aria-expanded={open}
-      style={{ display: "none" }}
+      initialFocus={inputRef}
     >
       <div className="Drawer--Wrapper">
         <div className="search__inner-wrapper search-drawer__inner">
@@ -80,25 +75,22 @@ export function SearchDrawer() {
           </div>
         </div>
       </div>
-    </search-bar>
+    </SiteDrawer>
   );
 }
 
 export function CartDrawer() {
-  const { drawer, closeDrawer } = useUI();
+  const { closeDrawer } = useUI();
   const { items, count } = useCart();
-  const open = drawer === "cart";
-  const ref = useDrawerAnimation<HTMLElement>(open, "right");
 
   return (
-    <div className="shopify-section">
-      <cart-drawer
-        ref={ref}
-        id="cart-drawer"
-        className="colorGroup--primary Drawer--wrapper Drawer--Right cart-drawer"
-        aria-expanded={open}
-        style={{ display: "none" }}
-      >
+    <SiteDrawer
+      name="cart"
+      side="right"
+      render={<cart-drawer />}
+      id="cart-drawer"
+      className="colorGroup--primary Drawer--wrapper Drawer--Right cart-drawer"
+    >
         <div className="cart-drawer__wrapper">
           <div className="cart-drawer__header">
             <div className="cart-drawer__header-wrapper">
@@ -130,8 +122,7 @@ export function CartDrawer() {
             </div>
           )}
         </div>
-      </cart-drawer>
-    </div>
+    </SiteDrawer>
   );
 }
 
@@ -246,17 +237,16 @@ function CartContents() {
 }
 
 export function CountryDrawer() {
-  const { drawer, closeDrawer } = useUI();
-  const open = drawer === "country";
-  const ref = useDrawerAnimation<HTMLDivElement>(open, "right");
+  const { closeDrawer } = useUI();
 
   return (
-    <div
-      ref={ref}
+    <SiteDrawer
+      name="country"
+      side="right"
+      render={<div />}
       id="modal-country"
       className="Drawer--wrapper Drawer--Right Drawer--OverHeader focusable country-selector country-selector-drawer colorGroup--primary"
-      aria-expanded={open}
-      style={{ display: "none", height: "auto" }}
+      style={{ height: "auto" }}
     >
       <form
         id="localization-form"
@@ -300,6 +290,6 @@ export function CountryDrawer() {
           </div>
         </localization-modal>
       </form>
-    </div>
+    </SiteDrawer>
   );
 }
