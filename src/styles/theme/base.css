@@ -2,3 +2,7 @@
 
 /* Links to routes not built yet (see SiteLink) keep the clickable look */
 a[aria-disabled="true"]{cursor:pointer}
+
+/* Scrollbars are hidden site-wide; the page still scrolls normally. */
+html,body{scrollbar-width:none;-ms-overflow-style:none}
+html::-webkit-scrollbar,body::-webkit-scrollbar{display:none}

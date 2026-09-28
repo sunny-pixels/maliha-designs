@@ -5,6 +5,8 @@ export type Product = {
   label?: "NEW" | "BESTSELLER";
   /** 4:5 card images; the first is the default. */
   images: string[];
+  /** CSS object-position for the card image crop (default "50% 20%"). */
+  cardFocus?: string;
   colors: { name: string; hex: string }[];
   sizes: { label: string; available: boolean }[];
   /** Price in INR. */
@@ -137,6 +139,7 @@ export const featuredProducts: Product[] = [
     name: "Rani Pink Silk Kurta Set",
     label: "BESTSELLER",
     images: [look(10), look(18), look(19)],
+    cardFocus: "60% 5%",
     colors: [{ name: "Rani Pink", hex: "#c8184a" }],
     sizes: sizes(),
     price: 14800,

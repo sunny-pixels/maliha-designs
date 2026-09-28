@@ -59,8 +59,8 @@ export default function WomenPage() {
         padding={{ m: [8, 0, 0], d: [24, 0, 0] }}
         columns={{ m: 2, d: 2 }}
         items={[
-          { image: women("discover-kurta-sets"), href: "/collections/kurta-sets", button: "KURTA SETS", focus: "50% 30%" },
-          { image: women("discover-sharara-sets"), href: "/collections/sharara-sets", button: "SHARARA SETS", focus: "50% 28%" },
+          { image: women("nav-festive-edit"), href: "/collections/kurta-sets", button: "KURTA SETS", focus: "50% 25%" },
+          { image: look(14), href: "/collections/sharara-sets", button: "SHARARA SETS", focus: "50% 22%" },
         ]}
       />
       <CustomImageGallery
@@ -68,8 +68,8 @@ export default function WomenPage() {
         padding={{ m: [8, 0, 0], d: [16, 0, 0] }}
         columns={{ m: 2, d: 2 }}
         items={[
-          { image: women("discover-drapes-dupattas"), href: "/collections/drape-sets", button: "DRAPES & DUPATTAS", focus: "50% 25%" },
-          { image: women("discover-co-ord-sets"), href: "/collections/co-ord-sets", button: "CO-ORD SETS", focus: "50% 30%" },
+          { image: "/images/variants/zari-stripe-blue-2.jpg", href: "/collections/drape-sets", button: "DRAPES & DUPATTAS", focus: "50% 20%" },
+          { image: women("discover-kurta-sets"), href: "/collections/co-ord-sets", button: "CO-ORD SETS", focus: "50% 30%" },
         ]}
       />
 
@@ -122,9 +122,9 @@ export default function WomenPage() {
         padding={{ m: [0, 20, 0], d: [0, 0, 0] }}
         items={[
           { image: women("spring-summer"), focus: "50% 20%", href: "/collections/spring-summer", title: "Spring/Summer", button: "SHOP NOW" },
-          { image: women("autumn-winter"), focus: "50% 20%", href: "/collections/autumn-winter", title: "Autumn/Winter", button: "SHOP NOW" },
+          { image: women("autumn-winter"), focus: "65% 10%", href: "/collections/autumn-winter", title: "Autumn/Winter", button: "SHOP NOW" },
           { image: look(12), focus: "50% 20%", href: "/collections/festive", title: "Festive", button: "SHOP NOW" },
-          { image: women("hand-picked"), focus: "50% 20%", href: "/collections/hand-picked", title: "Hand Picked", button: "SHOP NOW" },
+          { image: "/images/lookbook/look-34-flipped.jpg", focus: "50% 20%", href: "/collections/hand-picked", title: "Hand Picked", button: "SHOP NOW" },
         ]}
       />
 
@@ -140,8 +140,8 @@ export default function WomenPage() {
         padding={{ m: [0, 20, 0], d: [0, 0, 0] }}
         items={[
           { image: women("in-celebration"), focus: "50% 25%", href: "/collections/in-celebration", title: "In Celebration", button: "SEE ALL" },
-          { image: look(29), focus: "50% 20%", href: "/collections/in-evening", title: "In Evening", button: "DISCOVER" },
-          { image: look(28), focus: "50% 20%", href: "/collections/in-ease", title: "In Ease", button: "EXPLORE" },
+          { image: "/images/variants/zari-stripe-yellow-2.jpg", focus: "50% 15%", href: "/collections/in-evening", title: "In Evening", button: "DISCOVER" },
+          { image: look(28), focus: "50% 10%", href: "/collections/in-ease", title: "In Ease", button: "EXPLORE" },
         ]}
       />
     </main>

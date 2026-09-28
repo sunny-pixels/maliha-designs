@@ -24,6 +24,21 @@ type Props = {
   /** Render titles as <h1> (page hero) instead of <p>. */
   heading?: boolean;
   priority?: boolean;
+  /**
+   * Fill the screen below the announcement bar and header instead of using
+   * `ratio` — so the hero, together with those two strips, fills exactly
+   * one viewport on load. `ratio` still applies to `@supports not
+   * (aspect-ratio: auto)` browsers, where this override doesn't apply.
+   */
+  fullHeight?: boolean;
+  /** Larger button label — for a hero that's the only content on screen. */
+  largeButton?: boolean;
+};
+
+/** Full viewport height, minus the announcement bar and header above it. */
+const fullHeightStyle: React.CSSProperties = {
+  height: "calc(var(--viewport-height) - var(--announcement-height-fixed) - var(--header-height-fixed))",
+  aspectRatio: "auto",
 };
 
 const adjustment = { "--adjustment_m": "20px", "--adjustment_d": "20px" } as React.CSSProperties;
@@ -60,14 +75,23 @@ function ArtDirectedImage({
         {...mobileProps}
         fetchPriority={priority ? "high" : mobileProps.fetchPriority}
         className="image__element image__element--art"
-        style={{ ...mobileProps.style, "--focus-m": focus ?? "50% 50%" } as React.CSSProperties}
+        style={{ ...mobileProps.style, objectFit: "cover", "--focus-m": focus ?? "50% 50%" } as React.CSSProperties}
       />
     </picture>
   );
 }
 
 /** `section_collection_showcase`: full-bleed image tiles in an auto-fit grid with a tertiary button. */
-export function CollectionShowcase({ items, ratio, alignment, padding = noPadding, heading, priority }: Props) {
+export function CollectionShowcase({
+  items,
+  ratio,
+  alignment,
+  padding = noPadding,
+  heading,
+  priority,
+  fullHeight,
+  largeButton,
+}: Props) {
   const quality = priority ? QUALITY.hero : QUALITY.tile;
   const desktopSizes = items.length > 1 ? `(min-width: 1025px) ${Math.round(100 / items.length)}vw, 100vw` : "100vw";
 
@@ -82,7 +106,7 @@ export function CollectionShowcase({ items, ratio, alignment, padding = noPaddin
                   <div className="collection-showcase__image-container">
                     <div
                       className="image__container ratio--responsive AspectRatio AspectRatio--withFallback "
-                      style={ratioVars(ratio)}
+                      style={fullHeight ? { ...ratioVars(ratio), ...fullHeightStyle } : ratioVars(ratio)}
                     >
                       {item.mobileImage ? (
                         <ArtDirectedImage
@@ -103,7 +127,7 @@ export function CollectionShowcase({ items, ratio, alignment, padding = noPaddin
                           sizes={desktopSizes}
                           quality={quality}
                           priority={priority}
-                          style={{ objectPosition: item.focus ?? "50% 50%" }}
+                          style={{ objectFit: "cover", objectPosition: item.focus ?? "50% 50%" }}
                         />
                       )}
                     </div>
@@ -118,7 +142,9 @@ export function CollectionShowcase({ items, ratio, alignment, padding = noPaddin
                         <p>{item.text}</p>
                       </div>
                     )}
-                    <div className="collection-showcase__button-wrapper">
+                    <div
+                      className={`collection-showcase__button-wrapper${largeButton ? " collection-showcase__button-wrapper--large" : ""}`}
+                    >
                       <Link href={item.href} className="Button Button--TertiaryOnDark adjustment" style={adjustment}>
                         <div className="ButtonTextContainer">
                           <span className="ButtonText ">

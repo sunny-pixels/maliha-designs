@@ -8,9 +8,11 @@ export default function Home() {
         ratio={{ m: "4/5", d: "24/20" }}
         alignment="middleCenter"
         priority
+        fullHeight
+        largeButton
         items={[
-          { image: "/images/women/home-cover.jpg", href: "/women", button: "WOMEN", focus: "50% 20%" },
-          { image: "/images/lookbook/look-15.jpg", href: "/lookbook", button: "LOOKBOOK", focus: "50% 20%" },
+          { image: "/images/lookbook/look-20.jpg", href: "/women", button: "WOMEN", focus: "60% 30%" },
+          { image: "/images/women/autumn-winter.jpg", href: "/lookbook", button: "LOOKBOOK", focus: "50% 15%" },
         ]}
       />
       <HeadingText

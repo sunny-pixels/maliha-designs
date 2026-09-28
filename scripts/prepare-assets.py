@@ -279,8 +279,8 @@ def main() -> None:
         save(Image.open(path).convert("RGB"), MALIHA / f"ig-{n:02d}.jpg")
 
     # Wide banners at the exact desktop ratios (24/10 and 10/4).
-    save(triptych([LOOKBOOK / "look-10.jpg", LOOKBOOK / "look-16.jpg", LOOKBOOK / "look-23.jpg"], 2400, 960, 0.22), MALIHA / "banner-atelier.jpg", max_w=2400)
-    save(triptych([LOOKBOOK / "look-05.jpg", LOOKBOOK / "look-15.jpg", LOOKBOOK / "look-30.jpg"], 2400, 1000, 0.2), MALIHA / "banner-lookbook.jpg", max_w=2400)
+    save(triptych([LOOKBOOK / "look-10.jpg", LOOKBOOK / "look-22.jpg", LOOKBOOK / "look-23.jpg"], 2400, 960, 0.22), MALIHA / "banner-atelier.jpg", max_w=2400)
+    save(triptych([LOOKBOOK / "look-05.jpg", LOOKBOOK / "look-29.jpg", LOOKBOOK / "look-30.jpg"], 2400, 1000, 0.2), MALIHA / "banner-lookbook.jpg", max_w=2400)
 
     save_variants()
     save_women()

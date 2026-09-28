@@ -163,7 +163,7 @@ export function ProductCard({ product: initial, sizes = "(min-width: 1025px) 25v
                       fill
                       sizes={sizes}
                       quality={QUALITY.tile}
-                      style={{ objectPosition: "50% 20%" }}
+                      style={{ objectPosition: product.cardFocus ?? "50% 20%" }}
                     />
                   )}
                 </SwiperSlide>
@@ -207,9 +207,9 @@ export function ProductCard({ product: initial, sizes = "(min-width: 1025px) 25v
           <div className="pc__information mt-m">
             <div className="pc__information__meta">
               <div className="pm__information__meta--top">
-                <span className="pc__information__brand-name u-s2"> {product.brand} </span>
+                <span className="pc__information__brand-name u-s2"> {product.name} </span>
                 <div className="pc__information__name-switcher">
-                  <span className="pc__information__title pc__information__title--default u-p2"> {product.name} </span>
+                  <span className="pc__information__title pc__information__title--default u-p2"> {product.category.label} </span>
                   <div className="pc__information__title-variants">
                     <Sizes product={product} />
                   </div>
