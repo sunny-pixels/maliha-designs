@@ -6,8 +6,8 @@ export const brand = {
   logo: { src: "/logo-maliha.png", width: 539, height: 143 },
   footerLogo: { src: "/logo-maliha.png", width: 539, height: 143 },
   email: "hello@malihadesigns.com",
-  phone: "+91 00000 00000",
-  address: "Ahmedabad, Gujarat, India",
+  phone: "+91 98765 43210",
+  address: "Shop 104, One42, Amaya Properties, Ashok Vatika, Ahmedabad, India 380058",
   country: "India",
   currency: "INR",
   socials: [

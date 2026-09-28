@@ -66,14 +66,13 @@ export function Header() {
               {navigation.map((menu) => (
                 // The theme CSS opens the dropdown via `.header-link-desk[aria-expanded=true]`.
                 // eslint-disable-next-line jsx-a11y/role-supports-aria-props
-                <li
-                  key={menu.key}
-                  className="header-link-desk"
-                  aria-expanded={openMenu === menu.key}
-                  onMouseEnter={() => setOpenMenu(menu.key)}
-                  onFocus={() => setOpenMenu(menu.key)}
-                >
-                  <Link href={menu.href} className="hoverLinks u-p2 header-main-links hot-spot-mini">
+                <li key={menu.key} className="header-link-desk" aria-expanded={openMenu === menu.key}>
+                  <Link
+                    href={menu.href}
+                    className="hoverLinks u-p2 header-main-links hot-spot-mini"
+                    onMouseEnter={() => setOpenMenu(menu.key)}
+                    onFocus={() => setOpenMenu(menu.key)}
+                  >
                     {" "}
                     {menu.label}{" "}
                   </Link>

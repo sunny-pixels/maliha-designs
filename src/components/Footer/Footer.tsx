@@ -8,7 +8,6 @@ import { footerColumns, legalLinks, type FooterColumn } from "@/data/footer";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { useUI } from "@/components/UIProvider";
 import { ArrowDownIcon } from "@/components/ui/Icons";
-import { Newsletter } from "./Newsletter";
 
 const adj = (m: number, d: number) => ({ "--adjustment_m": `${m}px`, "--adjustment_d": `${d}px` }) as React.CSSProperties;
 
@@ -117,19 +116,22 @@ export function Footer() {
                   ))}
                 </div>
 
-                <Newsletter />
-
                 <div className="footer-socials__group">
                   <div className="footer-socials__text not_mobile not_pocket">
                     <div className="group-text-button__block-wrapper content-alignment--left ">
-                      <div className="heading-block adjustment rte u-p2" style={adj(0, 0)}>
-                        <p>Mail: {brand.email}</p>
+                      {/* Grid matches links__dropdown-group's 3 columns, so
+                          Address lines up under "SHOP" like Mail does under
+                          "ABOUT US" — not an arbitrary gap next to Mail. */}
+                      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.25rem 1rem" }}>
+                        <div className="heading-block adjustment rte u-p2" style={adj(0, 0)}>
+                          <p>Mail: {brand.email}</p>
+                        </div>
+                        <div className="heading-block adjustment rte u-p2" style={adj(0, 0)}>
+                          <p>Address: {brand.address}</p>
+                        </div>
                       </div>
                       <div className="heading-block adjustment rte u-p2" style={adj(4, 4)}>
                         <p>Phone: {brand.phone}</p>
-                      </div>
-                      <div className="heading-block adjustment rte u-p2" style={adj(0, 4)}>
-                        <p>Address: {brand.address}</p>
                       </div>
                     </div>
                   </div>
