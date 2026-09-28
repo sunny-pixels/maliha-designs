@@ -3,7 +3,7 @@ import { CollectionShowcase } from "@/components/CollectionShowcase";
 import { CustomImageGallery } from "@/components/CustomImageGallery";
 import { HeadingText } from "@/components/HeadingText";
 import { ProductCarousel } from "@/components/product/ProductCarousel";
-import { featuredProducts } from "@/data/products";
+import { featuredProducts, zariStripeVariants } from "@/data/products";
 import { shareMetadata } from "@/lib/seo";
 import type { Spacing } from "@/lib/sizing";
 
@@ -62,7 +62,8 @@ export default function LookbookPage() {
       />
 
       <HeadingText text="SHOP THE LOOK" padding={headingTop} blockPadding={headingBlock} />
-      <ProductCarousel products={featuredProducts} padding={{ m: [0, 20, 16], d: [8, 20, 0] }} />
+      {/* First card: the colour-variant demo (blue, with yellow and red swatches). */}
+      <ProductCarousel products={[zariStripeVariants[0], ...featuredProducts]} padding={{ m: [0, 20, 16], d: [8, 20, 0] }} />
 
       <HeadingText text="BEHIND THE CAMPAIGN" padding={headingSpaced} blockPadding={headingBlock} />
       <CollectionShowcase

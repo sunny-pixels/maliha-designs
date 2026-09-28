@@ -15,13 +15,14 @@ import shutil
 import zlib
 from pathlib import Path
 
-from PIL import Image
+from PIL import Image, ImageChops
 
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT.parent / "maliha-assets"
 PUBLIC = ROOT / "public"
 LOOKBOOK = PUBLIC / "images" / "lookbook"
 MALIHA = PUBLIC / "images" / "maliha"
+VARIANTS = PUBLIC / "images" / "variants"
 QUALITY = 82
 # Largest width any slot needs: lookbook tiles are ≤ 1/3 of a 1440px layout at
 # 2x DPR, product cards ≤ 1/4. Bigger originals only slow the image optimiser.
@@ -163,6 +164,28 @@ def build_share_images() -> None:
             (APP / route / name).write_text(text, encoding="utf-8")
 
 
+def save_variants() -> None:
+    """Colour-variant product shots (maliha-assets/varients/"<colour> <n>.jpg").
+    The originals are square with white bands either side of a portrait
+    photo; trim to the photo (plus a 2px inset against edge fringing)."""
+    VARIANTS.mkdir(parents=True, exist_ok=True)
+    for path in sorted((SRC / "varients").glob("*.jpg")):
+        colour, n = path.stem.split()
+        img = Image.open(path).convert("RGB")
+        mask = ImageChops.difference(img, Image.new("RGB", img.size, "white")).convert("L").point(lambda p: 255 if p > 18 else 0)
+        left, top, right, bottom = mask.getbbox()
+        save(img.crop((left + 2, top, right - 2, bottom)), VARIANTS / f"zari-stripe-{colour}-{n}.jpg")
+
+
+def write_placeholders() -> None:
+    """Blur placeholders for every public image, keyed by URL."""
+    blurs = {
+        "/" + p.relative_to(PUBLIC).as_posix(): blur_data_url(p)
+        for p in sorted((PUBLIC / "images").rglob("*.jpg"))
+    }
+    PLACEHOLDERS.write_text(json.dumps(blurs, indent=1) + "\n", encoding="utf-8")
+
+
 def main() -> None:
     # Remove the old Ströms imagery.
     for old in ["hero-man.jpg", "hero-woman.jpg", "store-facade.jpg"]:
@@ -191,15 +214,10 @@ def main() -> None:
     save(triptych([LOOKBOOK / "look-10.jpg", LOOKBOOK / "look-16.jpg", LOOKBOOK / "look-23.jpg"], 2400, 960, 0.22), MALIHA / "banner-atelier.jpg", max_w=2400)
     save(triptych([LOOKBOOK / "look-05.jpg", LOOKBOOK / "look-15.jpg", LOOKBOOK / "look-30.jpg"], 2400, 1000, 0.2), MALIHA / "banner-lookbook.jpg", max_w=2400)
 
+    save_variants()
     build_icons()
     build_share_images()
-
-    # Blur placeholders for every public image, keyed by URL.
-    blurs = {
-        "/" + p.relative_to(PUBLIC).as_posix(): blur_data_url(p)
-        for p in sorted((PUBLIC / "images").rglob("*.jpg"))
-    }
-    PLACEHOLDERS.write_text(json.dumps(blurs, indent=1) + "\n", encoding="utf-8")
+    write_placeholders()
 
     print(f"lookbook: {len(pdf_images) - 2} looks, instagram: {len(ig)} photos, logo: {pdf_images[0].size}")
 

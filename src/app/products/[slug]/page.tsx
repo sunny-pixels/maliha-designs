@@ -64,7 +64,8 @@ export default async function ProductPage({ params }: Params) {
   return (
     <main id="MainContent" className="content-for-layout">
       <div className="shopify-section product__module">
-        <ProductModule product={product} pairs={pairedProducts(product, 4)} />
+        {/* Keyed so switching colour (another slug, same route) starts with fresh state. */}
+        <ProductModule key={product.slug} product={product} pairs={pairedProducts(product, 4)} />
       </div>
 
       <ProductCarousel

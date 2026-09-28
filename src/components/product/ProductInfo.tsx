@@ -2,10 +2,11 @@
 
 import Image from "next/image";
 import Link from "@/components/ui/SiteLink";
-import { useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Mousewheel } from "swiper/modules";
-import { formatPrice, productHref, type Product } from "@/data/products";
+import { colorVariants, formatPrice, productHref, type Product } from "@/data/products";
 import { blurProps, QUALITY } from "@/lib/images";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { ArrowDownIcon, ArrowRightIcon, CheckIcon, SizeIcon } from "@/components/ui/Icons";
@@ -69,6 +70,53 @@ export function Breadcrumbs({ product }: { product: Product }) {
           })}
         </ol>
       </nav>
+    </div>
+  );
+}
+
+/**
+ * `.quick-add__colors-wrapper`. For a design with colour variants each swatch
+ * opens that colour's page, keeping the scroll position (as the theme swaps
+ * the product in place); otherwise the product's colours are shown only.
+ */
+function ColourSwatches({ product }: { product: Product }) {
+  const id = useId();
+  const router = useRouter();
+  const variants = colorVariants(product);
+
+  useEffect(() => {
+    variants.forEach((v) => v.slug !== product.slug && router.prefetch(productHref(v.slug)));
+  }, [variants, product.slug, router]);
+
+  const swatches =
+    variants.length > 1
+      ? variants.map((v) => ({ key: v.slug, colour: v.colors[0], current: v.slug === product.slug, slug: v.slug }))
+      : product.colors.map((c, i) => ({ key: c.name, colour: c, current: i === 0, slug: null }));
+
+  return (
+    <div className="pc__color-wrapper" role="radiogroup" aria-label="Colour">
+      {swatches.map((s, i) => (
+        <div key={s.key} className="pc__color-selector">
+          <input
+            type="radio"
+            className="pc__color-checkbox VisuallyHidden"
+            name={`${id}-color`}
+            id={`${id}-color-${i}`}
+            checked={s.current}
+            // Colours without their own page can't be chosen yet.
+            disabled={!s.current && !s.slug}
+            onChange={() => s.slug && router.push(productHref(s.slug), { scroll: false })}
+          />
+          <label
+            htmlFor={`${id}-color-${i}`}
+            className="pc__color-selector-label"
+            style={{ "--pc__color": s.colour.hex } as React.CSSProperties}
+            title={s.colour.name}
+          >
+            <span className="VisuallyHidden">{s.colour.name}</span>
+          </label>
+        </div>
+      ))}
     </div>
   );
 }
@@ -232,30 +280,7 @@ export function ProductInfo({ product, pairs, size, onSize, atcState, onAdd, fav
         <div className="pm__lowest-price-stock-wrapper" data-pm-hidden="" />
 
         <div className="quick-add__colors-wrapper" data-pm-sticky="">
-          <div className="pc__color-wrapper">
-            {product.colors.map((c, i) => (
-              <div key={c.name} className="pc__color-selector">
-                <input
-                  type="radio"
-                  className="pc__color-checkbox VisuallyHidden"
-                  name={`${id}-color`}
-                  id={`${id}-color-${i}`}
-                  defaultChecked={i === 0}
-                  disabled={i !== 0}
-                />
-                <label
-                  htmlFor={`${id}-color-${i}`}
-                  className="pc__color-selector-label"
-                  style={{ "--pc__color": c.hex } as React.CSSProperties}
-                  title={c.name}
-                >
-                  <span className="VisuallyHidden">
-                    {product.name} – {c.name}
-                  </span>
-                </label>
-              </div>
-            ))}
-          </div>
+          <ColourSwatches product={product} />
         </div>
 
         <div className="pm__size-guide-fit-wrapper" data-pm-sticky="" id={`${id}-sizes`}>

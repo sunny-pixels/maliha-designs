@@ -5,7 +5,7 @@ import Link from "@/components/ui/SiteLink";
 import { useId, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperType } from "swiper";
-import { formatPrice, productHref, type Product } from "@/data/products";
+import { colorVariants, formatPrice, productHref, type Product } from "@/data/products";
 import { blurProps, QUALITY } from "@/lib/images";
 import { ArrowLeftIcon, ArrowRightIcon, FavoritesFilledIcon, FavoritesIcon } from "@/components/ui/Icons";
 
@@ -38,9 +38,14 @@ function Sizes({ product }: { product: Product }) {
   );
 }
 
-/** Theme `product-card`: label, colour swatches, 4:5 image slider, brand, title, sizes and price. */
-export function ProductCard({ product, sizes = "(min-width: 1025px) 25vw, 80vw" }: { product: Product; sizes?: string }) {
+/**
+ * Theme `product-card`: label, colour swatches, 4:5 image slider, brand, title, sizes and price.
+ * For a design with colour variants the swatches switch the whole card to that colour.
+ */
+export function ProductCard({ product: initial, sizes = "(min-width: 1025px) 25vw, 80vw" }: { product: Product; sizes?: string }) {
   const id = useId();
+  const [product, setProduct] = useState(initial);
+  const variants = colorVariants(initial);
   const [swiper, setSwiper] = useState<SwiperType | null>(null);
   const [slide, setSlide] = useState(0);
   const [favorite, setFavorite] = useState(false);
@@ -50,6 +55,11 @@ export function ProductCard({ product, sizes = "(min-width: 1025px) 25vw, 80vw" 
   const [armed, setArmed] = useState(false);
   const arm = () => setArmed(true);
   const multi = product.images.length > 1;
+
+  const showColour = (v: Product) => {
+    setProduct(v);
+    setSlide(0);
+  };
 
   const step = (e: React.MouseEvent, dir: -1 | 1) => {
     e.preventDefault();
@@ -79,30 +89,59 @@ export function ProductCard({ product, sizes = "(min-width: 1025px) 25vw, 80vw" 
             )}
             <div className="not_mobile not_pocket">
               <div className="pc__color-wrapper">
-                {product.colors.map((c, i) => (
-                  <div key={c.name} className="pc__color-selector">
-                    <input
-                      type="radio"
-                      className="pc__color-checkbox VisuallyHidden"
-                      name={`product-color-${id}`}
-                      id={`${id}-color-${i}`}
-                      defaultChecked={i === 0}
-                    />
-                    <label
-                      htmlFor={`${id}-color-${i}`}
-                      className="pc__color-selector-label"
-                      style={{ "--pc__color": c.hex } as React.CSSProperties}
-                    >
-                      <span className="VisuallyHidden">
-                        {product.name} – {c.name}
-                      </span>
-                    </label>
-                  </div>
-                ))}
+                {variants.length > 1
+                  ? variants.map((v, i) => (
+                      <div key={v.slug} className="pc__color-selector">
+                        <input
+                          type="radio"
+                          className="pc__color-checkbox VisuallyHidden"
+                          name={`product-color-${id}`}
+                          id={`${id}-color-${i}`}
+                          checked={v.slug === product.slug}
+                          onChange={() => showColour(v)}
+                        />
+                        <label
+                          htmlFor={`${id}-color-${i}`}
+                          className="pc__color-selector-label"
+                          style={{ "--pc__color": v.colors[0].hex } as React.CSSProperties}
+                          title={v.colors[0].name}
+                          // Inside the card link: switch colour instead of opening the page.
+                          onClick={(e) => {
+                            e.preventDefault();
+                            showColour(v);
+                          }}
+                        >
+                          <span className="VisuallyHidden">
+                            {v.name} – {v.colors[0].name}
+                          </span>
+                        </label>
+                      </div>
+                    ))
+                  : product.colors.map((c, i) => (
+                      <div key={c.name} className="pc__color-selector">
+                        <input
+                          type="radio"
+                          className="pc__color-checkbox VisuallyHidden"
+                          name={`product-color-${id}`}
+                          id={`${id}-color-${i}`}
+                          defaultChecked={i === 0}
+                        />
+                        <label
+                          htmlFor={`${id}-color-${i}`}
+                          className="pc__color-selector-label"
+                          style={{ "--pc__color": c.hex } as React.CSSProperties}
+                        >
+                          <span className="VisuallyHidden">
+                            {product.name} – {c.name}
+                          </span>
+                        </label>
+                      </div>
+                    ))}
               </div>
             </div>
 
             <Swiper
+              key={product.slug}
               className="pc__image__swiper"
               slidesPerView={1}
               spaceBetween={8}

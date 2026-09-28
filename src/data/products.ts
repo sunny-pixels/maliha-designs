@@ -17,6 +17,11 @@ export type Product = {
   fabricCare: string[];
   fitNote: string;
   articleNo: string;
+  /**
+   * Colour variants of one design are separate products (as in the theme,
+   * where a swatch opens the other colour's page) sharing this key.
+   */
+  variantGroup?: string;
 };
 
 const look = (n: number) => `/images/lookbook/look-${String(n).padStart(2, "0")}.jpg`;
@@ -340,23 +345,66 @@ export const lookbookProducts: Product[] = [
   }),
 ];
 
-export const allProducts: Product[] = [...featuredProducts, ...lookbookProducts];
+const zari = (colour: string, n: number) => `/images/variants/zari-stripe-${colour}-${n}.jpg`;
+
+const zariStripe = (p: { colour: string; hex: string; pants: string; unavailable?: string[] }) =>
+  product({
+    name: `${p.colour} Zari Stripe Kurta Set`,
+    label: "NEW",
+    images: [1, 2, 3].map((n) => zari(p.colour.toLowerCase(), n)),
+    colors: [{ name: p.colour, hex: p.hex }],
+    sizes: sizes(p.unavailable),
+    price: 13500,
+    category: category.kurtaSets,
+    variantGroup: "zari-stripe-kurta-set",
+    description: `A straight ${p.colour.toLowerCase()} kurta woven with fine zari stripes, finished with an embroidered V-neck placket and banded hem, and paired with ${p.pants} pants for a quiet contrast.`,
+    details: [
+      "Two-piece set: kurta and pants",
+      "Zari-striped weave with an embroidered V-neck placket",
+      `Contrast ${p.pants} pants with elasticated waist`,
+      "Side slits and three-quarter sleeves",
+    ],
+    fabricCare: ["Chanderi silk kurta, silk pants", "Kurta lined in cotton", ...care.dryClean],
+  });
+
+/** One design in three colours — the demo for colour variants. Blue is the default. */
+export const zariStripeVariants: Product[] = [
+  zariStripe({ colour: "Blue", hex: "#3d5a7a", pants: "bottle-green" }),
+  zariStripe({ colour: "Yellow", hex: "#d4b12a", pants: "olive", unavailable: ["XS"] }),
+  zariStripe({ colour: "Red", hex: "#b3283d", pants: "plum" }),
+];
+
+export const allProducts: Product[] = [...featuredProducts, ...lookbookProducts, ...zariStripeVariants];
 
 export const getProduct = (slug: string) => allProducts.find((p) => p.slug === slug);
+
+/** Every colour of `product`'s design, in catalogue order (just `product` if it has none). */
+export const colorVariants = (product: Product): Product[] =>
+  product.variantGroup ? allProducts.filter((p) => p.variantGroup === product.variantGroup) : [product];
+
+/** Keep the first product of each variant group, so one design never fills a row. */
+const onePerDesign = (products: Product[]) =>
+  products.filter((p, i) => !p.variantGroup || products.findIndex((q) => q.variantGroup === p.variantGroup) === i);
 
 /**
  * "Pair it with" picks: other categories only, starting at a different point
  * for each product so neighbouring pages don't all show the same four.
  */
 export function pairedProducts(product: Product, count: number): Product[] {
-  const others = allProducts.filter((p) => p.category.slug !== product.category.slug);
+  const others = onePerDesign(allProducts.filter((p) => p.category.slug !== product.category.slug));
   const start = allProducts.indexOf(product) % Math.max(1, others.length);
   return [...others.slice(start), ...others.slice(0, start)].slice(0, count);
 }
 
-/** Same category first, then the rest of the catalogue, excluding `product` itself. */
+/**
+ * The design's other colours first (they aren't shown anywhere else on its
+ * page), then the same category, then the rest of the catalogue.
+ */
 export function relatedProducts(product: Product, count: number): Product[] {
-  const others = allProducts.filter((p) => p.slug !== product.slug);
+  const colours = colorVariants(product).filter((p) => p.slug !== product.slug);
+  const others = onePerDesign(
+    allProducts.filter((p) => p.slug !== product.slug && (!product.variantGroup || p.variantGroup !== product.variantGroup)),
+  );
   const same = others.filter((p) => p.category.slug === product.category.slug);
-  return [...same, ...others.filter((p) => !same.includes(p))].slice(0, count);
+  return [...colours, ...same, ...others.filter((p) => !same.includes(p))].slice(0, count);
 }
