@@ -30,6 +30,8 @@ import { MobileMenu } from "@/components/Header/MobileMenu";
 import { CartDrawer, CountryDrawer, SearchDrawer } from "@/components/drawers/Drawers";
 import { Footer } from "@/components/Footer/Footer";
 import { ScrollReveal } from "@/components/ScrollReveal";
+import { SmoothScroll } from "@/components/SmoothScroll";
+import { Cursor } from "@/components/ui/Cursor";
 
 // Icons (favicon.ico, icon.png, apple-icon.png) and share images
 // (opengraph-image.jpg, twitter-image.jpg) are file conventions in src/app,
@@ -62,6 +64,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           {" "}
           Skip to content{" "}
         </a>
+        <SmoothScroll />
+        <Cursor />
         <UIProvider>
           <CartProvider>
           {/* Empty first grid row, like the original newsletter-popup section. */}
