@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 };
 
 const look = (n: number) => `/images/lookbook/look-${String(n).padStart(2, "0")}.jpg`;
-const ig = (n: number) => `/images/maliha/ig-${String(n).padStart(2, "0")}.jpg`;
+const campaign = (n: number) => `/images/campaign/campaign-${n}.jpg`;
 
 /** All 33 looks from the SS21 lookbook PDF, in page order. */
 const looks = Array.from({ length: 33 }, (_, i) => i + 3);
@@ -71,9 +71,9 @@ export default function LookbookPage() {
         alignment="bottomLeft"
         padding={{ m: [0, 20, 0], d: [0, 0, 0] }}
         items={[
-          { image: ig(2), focus: "50% 30%", href: "/pages/about-us", title: "The Atelier", button: "DISCOVER" },
-          { image: ig(7), focus: "50% 25%", href: "/collections/lilac-edit", title: "The Lilac Edit", button: "SHOP NOW" },
-          { image: ig(1), focus: "50% 30%", href: "/women", title: "Shop Women", button: "EXPLORE" },
+          { image: campaign(1), focus: "50% 20%", href: "/pages/about-us", title: "The Atelier", button: "DISCOVER" },
+          { image: campaign(2), focus: "50% 20%", href: "/collections/lilac-edit", title: "The Lilac Edit", button: "SHOP NOW" },
+          { image: campaign(3), focus: "50% 20%", href: "/women", title: "Shop Women", button: "EXPLORE" },
         ]}
       />
     </main>

@@ -25,6 +25,7 @@ MALIHA = PUBLIC / "images" / "maliha"
 VARIANTS = PUBLIC / "images" / "variants"
 WOMEN = PUBLIC / "images" / "women"
 ABOUT = PUBLIC / "images" / "about"
+CAMPAIGN = PUBLIC / "images" / "campaign"
 QUALITY = 82
 # Largest width any slot needs: lookbook tiles are ≤ 1/3 of a 1440px layout at
 # 2x DPR, product cards ≤ 1/4. Bigger originals only slow the image optimiser.
@@ -153,6 +154,23 @@ def save_about() -> None:
         save(Image.open(SRC / "about" / name).convert("RGB"), ABOUT / dest)
 
 
+# Supplied art for the Lookbook page's "Behind the Campaign" cards, from
+# maliha-assets/lookbook (left-to-right: The Atelier, The Lilac Edit, Shop Women).
+CAMPAIGN_ART = {
+    "lookbook - campaign 1.jpg": "campaign-1.jpg",
+    "lookbook - campaign 2.jpg": "campaign-2.jpg",
+    "lookbook - campaign 3.jpg": "campaign-3.jpg",
+}
+
+
+def save_campaign() -> None:
+    """Behind the Campaign cards on the Lookbook page."""
+    CAMPAIGN.mkdir(parents=True, exist_ok=True)
+    for name, dest in CAMPAIGN_ART.items():
+        save(Image.open(SRC / "lookbook" / name).convert("RGB"), CAMPAIGN / dest)
+
+
+
 
 GOLD = (156, 122, 60)
 CREAM = (253, 252, 251)
@@ -267,6 +285,7 @@ def main() -> None:
     save_variants()
     save_women()
     save_about()
+    save_campaign()
     build_icons()
     build_share_images()
     write_placeholders()
