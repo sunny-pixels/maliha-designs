@@ -5,7 +5,7 @@ import Link from "@/components/ui/SiteLink";
 import { useId, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperType } from "swiper";
-import { formatPrice, type Product } from "@/data/products";
+import { formatPrice, productHref, type Product } from "@/data/products";
 import { blurProps, QUALITY } from "@/lib/images";
 import { ArrowLeftIcon, ArrowRightIcon, FavoritesFilledIcon, FavoritesIcon } from "@/components/ui/Icons";
 
@@ -67,7 +67,7 @@ export function ProductCard({ product, sizes = "(min-width: 1025px) 25vw, 80vw" 
         onTouchStart={arm}
         onFocus={arm}
       >
-        <Link className="pc__wrapper-link" href={`/products/${product.slug}`}>
+        <Link className="pc__wrapper-link" href={productHref(product.slug)}>
           <div className="card-product">
             {product.label && (
               <div className="ProductCard--LabelsHolder">

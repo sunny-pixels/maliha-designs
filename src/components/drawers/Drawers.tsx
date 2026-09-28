@@ -1,9 +1,13 @@
 "use client";
 
+import Image from "next/image";
 import Link from "@/components/ui/SiteLink";
 import { useEffect, useRef, useState } from "react";
 import { useUI } from "@/components/UIProvider";
-import { ArrowDownIcon, CloseIcon, SearchIcon } from "@/components/ui/Icons";
+import { MAX_QTY, useCart } from "@/components/cart/CartProvider";
+import { formatPrice, productHref } from "@/data/products";
+import { blurProps, QUALITY } from "@/lib/images";
+import { ArrowDownIcon, CloseIcon, MinusIcon, PlusIcon, SearchIcon } from "@/components/ui/Icons";
 import { useDrawerAnimation } from "./useDrawerAnimation";
 
 const suggestions = ["Kurta sets", "Lehengas", "Dupattas"];
@@ -82,6 +86,7 @@ export function SearchDrawer() {
 
 export function CartDrawer() {
   const { drawer, closeDrawer } = useUI();
+  const { items, count } = useCart();
   const open = drawer === "cart";
   const ref = useDrawerAnimation<HTMLElement>(open, "right");
 
@@ -97,28 +102,145 @@ export function CartDrawer() {
         <div className="cart-drawer__wrapper">
           <div className="cart-drawer__header">
             <div className="cart-drawer__header-wrapper">
-              <h3 className="cart-drawer__title u-h2"> 0 items </h3>
+              <h3 className="cart-drawer__title u-h2">
+                {" "}
+                {count} {count === 1 ? "item" : "items"}{" "}
+              </h3>
               <button className="Drawer--Close" type="button" aria-label="Close" onClick={closeDrawer}>
                 <CloseIcon />
               </button>
             </div>
           </div>
-          <div className="cart-drawer__content cart-drawer__content--empty">
-            <div className="cart-drawer__cta">
-              <div className="cart-drawer__inner-cta">
-                <p className="u-p2 cart-drawer--empty-title">Your cart is empty</p>
-                <Link href="/" className="Button Button--PrimaryOnLight" onClick={closeDrawer}>
-                  <div className="ButtonTextContainer">
-                    <span className="ButtonText">
-                      <span className="button-txt u-pb1">Continue shopping</span>
-                    </span>
-                  </div>
-                </Link>
+          {items.length ? (
+            <CartContents />
+          ) : (
+            <div className="cart-drawer__content cart-drawer__content--empty">
+              <div className="cart-drawer__cta">
+                <div className="cart-drawer__inner-cta">
+                  <p className="u-p2 cart-drawer--empty-title">Your cart is empty</p>
+                  <Link href="/" className="Button Button--PrimaryOnLight" onClick={closeDrawer}>
+                    <div className="ButtonTextContainer">
+                      <span className="ButtonText">
+                        <span className="button-txt u-pb1">Continue shopping</span>
+                      </span>
+                    </div>
+                  </Link>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </cart-drawer>
+    </div>
+  );
+}
+
+/** Line items + subtotal footer, using the theme's `cart-item` / `cart-drawer__footer` markup. */
+function CartContents() {
+  const { closeDrawer } = useUI();
+  const { items, subtotal, setQty, remove } = useCart();
+
+  return (
+    <div className="cart-drawer__content cart-drawer__content--full">
+      <div className="cart-drawer__items">
+        {items.map(({ product, size, qty }) => {
+          const href = productHref(product.slug);
+          const image = product.images[0];
+          return (
+            <div key={`${product.slug}-${size}`} className="cart-item">
+              <div className="cart-item__inner">
+                <Link
+                  href={href}
+                  className="cart-item__image AspectRatio"
+                  style={{ "--aspect-ratio": "4/5" } as React.CSSProperties}
+                  onClick={closeDrawer}
+                >
+                  <Image
+                    src={image}
+                    {...blurProps(image)}
+                    alt={product.name}
+                    fill
+                    sizes="90px"
+                    quality={QUALITY.tile}
+                    style={{ objectFit: "cover", objectPosition: "50% 20%" }}
+                  />
+                </Link>
+                <div className="cart-item__info">
+                  <div className="cart-drawer__block">
+                    <div className="cart-drawer__block-left">
+                      <span className="u-s2">{product.brand}</span>
+                      <div className="cart-drawer__block-text">
+                        <Link href={href} className="cart-item__title u-p2" onClick={closeDrawer}>
+                          {product.name}
+                        </Link>
+                      </div>
+                      <div className="cart-item__option-wrapper u-p3">
+                        <span className="cart-item__option">
+                          Size: <span className="cart-item__option-value">{size}</span>
+                        </span>
+                      </div>
+                    </div>
+                    <div className="cart-drawer__block-right">
+                      <span className="cart-item__price u-s2">{formatPrice(product.price * qty)}</span>
+                    </div>
+                  </div>
+                  <div className="cart-item__price-action-block">
+                    <div className="cart-item__actions-container">
+                      <div className="cart-item__quantity-selector">
+                        <button
+                          type="button"
+                          className="cart-item__quantity-button"
+                          aria-label={`Decrease quantity of ${product.name}`}
+                          onClick={() => setQty(product.slug, size, qty - 1)}
+                        >
+                          <MinusIcon />
+                        </button>
+                        <input className="cart-item__quantity u-p3" value={qty} readOnly aria-label="Quantity" />
+                        <button
+                          type="button"
+                          className={`cart-item__quantity-button ${qty >= MAX_QTY ? "cart-item__quantity-button--disabled" : ""}`}
+                          aria-label={`Increase quantity of ${product.name}`}
+                          disabled={qty >= MAX_QTY}
+                          onClick={() => setQty(product.slug, size, qty + 1)}
+                        >
+                          <PlusIcon />
+                        </button>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      className="cart-item__remove cart-item__remove--text u-p3 link-underline"
+                      onClick={() => remove(product.slug, size)}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <div className="cart-drawer__footer">
+        <div className="cart_drawer__footer-totals">
+          <div className="cd__subtotal-container cd__subtotal-container--subtotal u-s2">
+            <span>Subtotal</span>
+            <span>{formatPrice(subtotal)}</span>
+          </div>
+          <p className="cd__subtotal-container--taxes u-p3">Shipping and taxes are calculated at checkout.</p>
+        </div>
+        <div className="cd__total-submit">
+          {/* No checkout yet — the cart is browser-only for now. */}
+          <button type="button" className="Button Button--PrimaryOnLight cart-drawer__checkout" disabled>
+            <div className="ButtonTextContainer">
+              <span className="ButtonText">
+                <span className="button-txt u-pb1">Checkout — coming soon</span>
+              </span>
+            </div>
+          </button>
+        </div>
+        <div className="cart-drawer__footer-bottom" />
+      </div>
     </div>
   );
 }

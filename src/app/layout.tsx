@@ -23,6 +23,7 @@ import "@/styles/theme/main-footer.css";
 import "@/styles/theme/inline.css";
 
 import { UIProvider } from "@/components/UIProvider";
+import { CartProvider } from "@/components/cart/CartProvider";
 import { AnnouncementBar } from "@/components/AnnouncementBar";
 import { Header } from "@/components/Header/Header";
 import { MobileMenu } from "@/components/Header/MobileMenu";
@@ -62,6 +63,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           Skip to content{" "}
         </a>
         <UIProvider>
+          <CartProvider>
           {/* Empty first grid row, like the original newsletter-popup section. */}
           <div className="shopify-section" />
           <AnnouncementBar />
@@ -73,6 +75,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <Footer />
           <CountryDrawer />
           <ScrollReveal />
+          </CartProvider>
         </UIProvider>
       </body>
     </html>

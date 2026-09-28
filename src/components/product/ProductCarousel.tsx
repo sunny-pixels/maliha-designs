@@ -9,21 +9,37 @@ import { ArrowLeftIcon, ArrowRightIcon } from "@/components/ui/Icons";
 import { padVars, type Spacing } from "@/lib/sizing";
 import { ProductCard } from "./ProductCard";
 
-type Props = { products: Product[]; padding: Spacing };
+type Props = {
+  products: Product[];
+  padding: Spacing;
+  /** In-section `u-h1` heading, as on the product page's recommendations. */
+  heading?: string;
+  desktopPerView?: number;
+};
 
 /** `section_product_carousel`: 1.265 cards on mobile, 4 on desktop, rewinding, arrows below. */
-export function ProductCarousel({ products, padding }: Props) {
+export function ProductCarousel({ products, padding, heading, desktopPerView = 4 }: Props) {
   const [swiper, setSwiper] = useState<SwiperType | null>(null);
 
   return (
     <div className="shopify-section">
-      <div className="product-carousel colorGroup--primary" style={{ position: "relative" }}>
+      <div
+        className={`product-carousel colorGroup--primary ${heading ? "product-carousel--recommendations" : ""}`}
+        style={{ position: "relative" }}
+      >
         <div className="product-carousel__inner">
           <div
             className="product-carousel__section-wrapper pad--responsive sectionMax_width animatedContent"
             data-animation="elementFadeIn"
             style={padVars(padding)}
           >
+            {heading && (
+              <div className="product-carousel__header product-carousel__header--left">
+                <div className="heading-block adjustment rte u-h1">
+                  <p>{heading}</p>
+                </div>
+              </div>
+            )}
             <div className="product-carousel__slider-wrapper">
               <Swiper
                 className="product-carousel__swiper"
@@ -35,7 +51,7 @@ export function ProductCarousel({ products, padding }: Props) {
                 rewind
                 centerInsufficientSlides
                 mousewheel={{ forceToAxis: true }}
-                breakpoints={{ 1025: { slidesPerView: 4, spaceBetween: 16, slidesOffsetBefore: 0, slidesOffsetAfter: 0 } }}
+                breakpoints={{ 1025: { slidesPerView: desktopPerView, spaceBetween: 16, slidesOffsetBefore: 0, slidesOffsetAfter: 0 } }}
                 onSwiper={setSwiper}
               >
                 {products.map((p) => (

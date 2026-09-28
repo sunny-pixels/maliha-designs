@@ -7,6 +7,7 @@ import { brand } from "@/config/brand";
 import { navigation } from "@/data/navigation";
 import { ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { useUI } from "@/components/UIProvider";
+import { useCart } from "@/components/cart/CartProvider";
 import { BarsIcon, CloseIcon, FavoritesIcon, SearchIcon, ShoppingBagIcon, UserIcon } from "@/components/ui/Icons";
 import { MegaMenu } from "./MegaMenu";
 
@@ -34,6 +35,7 @@ function Logo({ variant }: { variant: "desktop" | "mobile" }) {
 
 export function Header() {
   const { drawer, toggleDrawer } = useUI();
+  const { count } = useCart();
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
@@ -141,12 +143,12 @@ export function Header() {
                 <button
                   type="button"
                   className="u-p3 header-cart-btn hot-spot-mini"
-                  aria-label="Cart"
+                  aria-label={count ? `Cart, ${count} items` : "Cart"}
                   onClick={() => toggleDrawer("cart")}
                 >
                   <ShoppingBagIcon />
-                  <span className="header__item-count header__item-count--cart" style={{ display: "none" }}>
-                    0
+                  <span className="header__item-count header__item-count--cart" style={{ display: count ? undefined : "none" }}>
+                    {count}
                   </span>
                 </button>
               </li>

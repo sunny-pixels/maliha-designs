@@ -1,8 +1,9 @@
 import Link from "next/link";
 import type { ComponentProps } from "react";
+import { allProducts, productHref } from "@/data/products";
 
 /** Routes that have a page in `src/app`. Everything else is rendered inert until it's built. */
-const LIVE_ROUTES = new Set(["/", "/woman", "/lookbook"]);
+const LIVE_ROUTES = new Set(["/", "/woman", "/lookbook", ...allProducts.map((p) => productHref(p.slug))]);
 
 export function isLiveHref(href: string) {
   if (!href.startsWith("/")) return true; // external, mailto:, #anchor

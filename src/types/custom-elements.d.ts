@@ -16,6 +16,14 @@ declare module "react" {
       "localization-modal": CustomElement;
       "product-card": CustomElement;
       "section-lookbook": CustomElement;
+      "product-component": CustomElement;
+      "swiper-init": CustomElement;
+      "variant-selects": CustomElement;
+      "variant-selectbox": CustomElement;
+      "pdp-usp-group": CustomElement;
+      "pdp-upsell": CustomElement;
+      "product-carousel": CustomElement;
+      "recently-viewed": CustomElement;
     }
   }
 }
