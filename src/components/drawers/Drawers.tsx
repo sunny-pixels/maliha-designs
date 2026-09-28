@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/ui/SiteLink";
 import { useEffect, useRef, useState } from "react";
 import { useUI } from "@/components/UIProvider";
 import { ArrowDownIcon, CloseIcon, SearchIcon } from "@/components/ui/Icons";
@@ -36,7 +36,7 @@ export function SearchDrawer() {
                   <CloseIcon />
                 </button>
                 <label className="search-input__wrapper hot-spot" htmlFor="search-drawer-input">
-                  <form className="search-form" action="/search" method="get">
+                  <form className="search-form" onSubmit={(e) => e.preventDefault()}>
                     <SearchIcon />
                     <input type="hidden" name="type" value="product" />
                     <input

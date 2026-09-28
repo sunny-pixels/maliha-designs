@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/ui/SiteLink";
 import { LongArrowRightIcon } from "@/components/ui/Icons";
 import { blurProps, QUALITY } from "@/lib/images";
 import { padVars, ratioVars, type Ratio, type Spacing } from "@/lib/sizing";

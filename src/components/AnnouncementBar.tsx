@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/ui/SiteLink";
 import { useRef } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 

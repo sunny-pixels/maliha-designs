@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/ui/SiteLink";
 import { useRef, useState } from "react";
 import type { NavCard, TopMenu } from "@/data/navigation";
 import { gsap, useGSAP } from "@/lib/gsap";
