@@ -34,6 +34,7 @@ export default function WomenPage() {
       <CollectionShowcase
         heading
         priority
+        largeButton
         ratio={{ m: "4/5", d: "24/10" }}
         alignment="middleCenter"
         items={[
@@ -42,7 +43,7 @@ export default function WomenPage() {
             mobileImage: women("hero-mobile"),
             focus: "50% 30%",
             href: "/collections/festive-edit",
-            title: "Made by Maliha - The Festive Edit",
+            title: "Made by Maliha, The Festive Edit",
             button: "SHOP NOW",
           },
         ]}

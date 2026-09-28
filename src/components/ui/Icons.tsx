@@ -45,16 +45,19 @@ export function ArrowDownIcon({ className = "" }: IconProps) {
   );
 }
 
-export function LongArrowRightIcon({ className = "" }: IconProps) {
+/** `bold`: thicker stroke for a hero's button (see .Svg--bold in section-collection-showcase.css). */
+export function LongArrowRightIcon({ className = "", bold = false }: IconProps & { bold?: boolean }) {
   return (
-    <svg className={`Svg Svg--long-arrow-right ${className}`} {...base}>
+    <svg className={`Svg Svg--long-arrow-right ${bold ? "Svg--bold" : ""} ${className}`} {...base}>
       <path
         d="M15 8.89V9.54039H2.32519C2.14559 9.54039 2 9.39479 2 9.21519C2 9.03559 2.14559 8.89 2.3252 8.89H15Z"
         fill="#231F20"
+        strokeWidth={bold ? 0.75 : undefined}
       />
       <path
         d="M15.2295 9L15.46 9.22949L15.2295 9.45898L11.459 13.2295C11.3322 13.3562 11.1267 13.3562 11 13.2295C10.8733 13.1027 10.8733 12.8972 11 12.7705L14.541 9.22949L11 5.68847C10.8733 5.56173 10.8733 5.35623 11 5.22949C11.1267 5.10274 11.3322 5.10274 11.459 5.22949L15.2295 9Z"
         fill="#231F20"
+        strokeWidth={bold ? 0.75 : undefined}
       />
     </svg>
   );

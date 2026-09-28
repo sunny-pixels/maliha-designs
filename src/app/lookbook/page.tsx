@@ -32,6 +32,7 @@ export default function LookbookPage() {
       <CollectionShowcase
         heading
         priority
+        largeButton
         ratio={{ m: "4/5", d: "24/10" }}
         alignment="middleCenter"
         items={[

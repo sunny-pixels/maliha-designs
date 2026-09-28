@@ -45,10 +45,10 @@ export const navigation: TopMenu[] = [
       link("Offer: Made by Maliha", col("made-by-maliha")),
     ],
     rootCards: [
-      card("Made by Maliha - The Festive Edit", col("festive-edit"), women("nav-festive-edit")),
+      card("Made by Maliha, The Festive Edit", col("festive-edit"), women("nav-festive-edit")),
       card("New Arrivals", col("new-arrivals"), women("nav-new-arrivals")),
     ],
-    mobileRootCards: [card("Made by Maliha - The Festive Edit", col("festive-edit"), women("nav-festive-edit"))],
+    mobileRootCards: [card("Made by Maliha, The Festive Edit", col("festive-edit"), women("nav-festive-edit"))],
     second: [
       {
         key: "women-clothing",

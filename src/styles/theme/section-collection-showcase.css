@@ -6,3 +6,7 @@
 .collection-showcase__button-wrapper--large .ButtonTextContainer,.collection-showcase__button-wrapper--large .ButtonText{height:1.5rem}
 .collection-showcase__button-wrapper--large .button-txt{font-size:1.125rem;line-height:1.5rem}
 .collection-showcase__button-wrapper--large svg{height:1.375rem;width:1.375rem}
+
+/* Bolder arrow icon for a hero's button (see LongArrowRightIcon's `bold` prop).
+   currentColor inherits the button text's colour, whichever variant it is. */
+svg.Svg--bold path{stroke:currentColor}

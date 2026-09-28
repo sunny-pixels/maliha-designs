@@ -87,24 +87,37 @@ def save_logo(fallback: Image.Image) -> None:
     img.crop((max(0, left - pad), max(0, top - pad), right + pad, bottom + pad)).save(PUBLIC / "logo-maliha.png", optimize=True)
 
 
-def cover(img: Image.Image, w: int, h: int, focus_y: float = 0.5) -> Image.Image:
-    """Resize + crop to exactly w×h (like CSS object-fit: cover)."""
-    scale = max(w / img.width, h / img.height)
+def cover(img: Image.Image, w: int, h: int, focus_y: float = 0.5, zoom: float = 1.0) -> Image.Image:
+    """Resize + crop to exactly w×h (like CSS object-fit: cover). `zoom` scales
+    beyond the minimum cover-fit, so `focus_y` has room to crop in tighter at
+    the top/bottom than the photo's own edges allow at zoom=1."""
+    scale = max(w / img.width, h / img.height) * zoom
     resized = img.resize((round(img.width * scale), round(img.height * scale)), Image.LANCZOS)
     left = (resized.width - w) // 2
     top = round((resized.height - h) * focus_y)
     return resized.crop((left, top, left + w, top + h))
 
 
-def triptych(paths: list[Path], w: int, h: int, focus_y: float, trim_left: list[float] | None = None) -> Image.Image:
-    """Photos side by side; `trim_left` drops a coloured border strip per photo first."""
+def triptych(
+    paths: list[Path],
+    w: int,
+    h: int,
+    focus_y: float | list[float],
+    trim_left: list[float] | None = None,
+    zoom: float | list[float] = 1.0,
+) -> Image.Image:
+    """Photos side by side; `trim_left` drops a coloured border strip per photo
+    first. `focus_y`/`zoom` are shared across all photos, or given per photo as
+    a list."""
     panel = w // len(paths)
     out = Image.new("RGB", (w, h))
     for i, p in enumerate(paths):
         img = Image.open(p).convert("RGB")
         dx = round(img.width * (trim_left[i] if trim_left else 0))
         img = img.crop((dx, 0, img.width - round(img.width * 0.04 if trim_left else 0), img.height))
-        out.paste(cover(img, panel, h, focus_y), (i * panel, 0))
+        fy = focus_y[i] if isinstance(focus_y, list) else focus_y
+        z = zoom[i] if isinstance(zoom, list) else zoom
+        out.paste(cover(img, panel, h, fy, zoom=z), (i * panel, 0))
     return out
 
 # Supplied art for the Women page ("<source name>": "<public name>"), from
@@ -280,7 +293,17 @@ def main() -> None:
 
     # Wide banners at the exact desktop ratios (24/10 and 10/4).
     save(triptych([LOOKBOOK / "look-10.jpg", LOOKBOOK / "look-22.jpg", LOOKBOOK / "look-23.jpg"], 2400, 960, 0.22), MALIHA / "banner-atelier.jpg", max_w=2400)
-    save(triptych([LOOKBOOK / "look-05.jpg", LOOKBOOK / "look-29.jpg", LOOKBOOK / "look-30.jpg"], 2400, 1000, 0.2), MALIHA / "banner-lookbook.jpg", max_w=2400)
+    save(
+        triptych(
+            [LOOKBOOK / "look-05.jpg", LOOKBOOK / "look-29.jpg", LOOKBOOK / "look-30.jpg"],
+            2400,
+            1000,
+            [0.2, 0.0, 0.2],
+            zoom=[1.0, 1.2, 1.0],
+        ),
+        MALIHA / "banner-lookbook.jpg",
+        max_w=2400,
+    )
 
     save_variants()
     save_women()

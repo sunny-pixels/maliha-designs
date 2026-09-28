@@ -149,7 +149,7 @@ export function CollectionShowcase({
                         <div className="ButtonTextContainer">
                           <span className="ButtonText ">
                             <span className="button-txt u-pb1">{item.button}</span>
-                            <LongArrowRightIcon />
+                            <LongArrowRightIcon bold={priority} />
                           </span>
                         </div>
                       </Link>
