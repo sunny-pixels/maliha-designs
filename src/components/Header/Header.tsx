@@ -23,7 +23,7 @@ function Logo({ variant }: { variant: "desktop" | "mobile" }) {
             fill
             priority
             sizes={desktop ? "140px" : "104px"}
-            quality={90}
+            quality={85}
             style={{ objectPosition: "50% 50%" }}
           />
         </div>

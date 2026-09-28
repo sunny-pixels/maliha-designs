@@ -38,13 +38,16 @@ export function ScrollReveal() {
           const passed = batch.filter((el) => el.getBoundingClientRect().bottom < 0);
           const onScreen = batch.filter((el) => !passed.includes(el));
 
-          gsap.set(passed, { opacity: 1 });
-          gsap.to(onScreen, {
-            opacity: 1,
-            duration: motion.duration,
-            stagger: Math.min(motion.stagger, 0.4 / Math.max(1, onScreen.length)),
-            ease: "none",
-          });
+          // GSAP warns on empty targets, and one of these lists usually is.
+          if (passed.length) gsap.set(passed, { opacity: 1 });
+          if (onScreen.length) {
+            gsap.to(onScreen, {
+              opacity: 1,
+              duration: motion.duration,
+              stagger: Math.min(motion.stagger, 0.4 / onScreen.length),
+              ease: "none",
+            });
+          }
 
           onScreen.forEach((el) => {
             const images = el.querySelectorAll(".collection-showcase__image-container");

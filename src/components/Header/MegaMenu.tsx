@@ -61,16 +61,16 @@ export function MegaMenu({ menu, open, onClose }: Props) {
   useGSAP(
     () => {
       if (!open) return;
-      gsap.fromTo(
-        ".desktop-menu__column--third .desktop-menu__link, .desktop-menu__column--pseudo-third .desktop-menu__link",
-        { autoAlpha: 0, x: -6 },
-        { autoAlpha: 1, x: 0, duration: 0.25, stagger: 0.012, ease: "power2.out" },
-      );
-      gsap.fromTo(
-        ".desktop-menu__collection-card",
-        { autoAlpha: 0 },
-        { autoAlpha: 1, duration: 0.35, stagger: 0.06, ease: "power1.out" },
-      );
+      // Some items have no third column or cards; GSAP warns on empty targets.
+      const q = gsap.utils.selector(rootRef);
+      const links = q(".desktop-menu__column--third .desktop-menu__link, .desktop-menu__column--pseudo-third .desktop-menu__link");
+      const cards = q(".desktop-menu__collection-card");
+      if (links.length) {
+        gsap.fromTo(links, { autoAlpha: 0, x: -6 }, { autoAlpha: 1, x: 0, duration: 0.25, stagger: 0.012, ease: "power2.out" });
+      }
+      if (cards.length) {
+        gsap.fromTo(cards, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.35, stagger: 0.06, ease: "power1.out" });
+      }
     },
     { dependencies: [activeKey], scope: rootRef },
   );

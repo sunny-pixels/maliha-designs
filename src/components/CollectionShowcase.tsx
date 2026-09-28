@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import Link from "@/components/ui/SiteLink";
 import { LongArrowRightIcon } from "@/components/ui/Icons";
 import { blurProps, QUALITY } from "@/lib/images";
@@ -28,6 +28,44 @@ type Props = {
 
 const adjustment = { "--adjustment_m": "20px", "--adjustment_d": "20px" } as React.CSSProperties;
 
+/**
+ * Separate mobile/desktop crops in one `<picture>`, so the browser downloads
+ * only the one it shows (two CSS-hidden `<Image priority>`s fetched both).
+ * The mobile crop's `focus` is applied below the desktop breakpoint only.
+ */
+function ArtDirectedImage({
+  mobile,
+  desktop,
+  desktopSizes,
+  focus,
+  quality,
+  priority,
+}: {
+  mobile: string;
+  desktop: string;
+  desktopSizes: string;
+  focus?: string;
+  quality: number;
+  priority?: boolean;
+}) {
+  const common = { alt: "", fill: true, quality, priority };
+  const { props: desktopProps } = getImageProps({ ...common, src: desktop, sizes: desktopSizes });
+  const { props: mobileProps } = getImageProps({ ...common, ...blurProps(mobile), src: mobile, sizes: "100vw" });
+
+  return (
+    <picture>
+      <source media="(min-width: 1025px)" srcSet={desktopProps.srcSet} sizes={desktopSizes} />
+      {/* eslint-disable-next-line jsx-a11y/alt-text -- props (incl. alt) come from getImageProps */}
+      <img
+        {...mobileProps}
+        fetchPriority={priority ? "high" : mobileProps.fetchPriority}
+        className="image__element image__element--art"
+        style={{ ...mobileProps.style, "--focus-m": focus ?? "50% 50%" } as React.CSSProperties}
+      />
+    </picture>
+  );
+}
+
 /** `section_collection_showcase`: full-bleed image tiles in an auto-fit grid with a tertiary button. */
 export function CollectionShowcase({ items, ratio, alignment, padding = noPadding, heading, priority }: Props) {
   const quality = priority ? QUALITY.hero : QUALITY.tile;
@@ -47,30 +85,14 @@ export function CollectionShowcase({ items, ratio, alignment, padding = noPaddin
                       style={ratioVars(ratio)}
                     >
                       {item.mobileImage ? (
-                        <>
-                          <Image
-                            className="image__element not_desktop"
-                            src={item.mobileImage}
-                            {...blurProps(item.mobileImage)}
-                            alt=""
-                            fill
-                            sizes="100vw"
-                            quality={quality}
-                            priority={priority}
-                            style={{ objectPosition: item.focus ?? "50% 50%" }}
-                          />
-                          <Image
-                            className="image__element not_mobile not_pocket"
-                            src={item.image}
-                            {...blurProps(item.image)}
-                            alt=""
-                            fill
-                            sizes={desktopSizes}
-                            quality={quality}
-                            priority={priority}
-                            style={{ objectPosition: "50% 50%" }}
-                          />
-                        </>
+                        <ArtDirectedImage
+                          mobile={item.mobileImage}
+                          desktop={item.image}
+                          desktopSizes={desktopSizes}
+                          focus={item.focus}
+                          quality={quality}
+                          priority={priority}
+                        />
                       ) : (
                         <Image
                           className="image__element"
