@@ -299,7 +299,7 @@ export const featuredProducts: Product[] = [
   }),
 ];
 
-/** Products tagged by the hotspots in the "Made by Maliha" lookbook section. */
+/** Products in the slider beside the "Made by Maliha" lookbook image. */
 export const lookbookProducts: Product[] = [
   product({
     name: "Lilac Hand-Embroidered Drape Set",

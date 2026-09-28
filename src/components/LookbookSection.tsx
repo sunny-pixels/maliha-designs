@@ -2,17 +2,14 @@
 
 import Image from "next/image";
 import Link from "@/components/ui/SiteLink";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperType } from "swiper";
 import type { Product } from "@/data/products";
-import { gsap, useGSAP } from "@/lib/gsap";
 import { blurProps, QUALITY } from "@/lib/images";
 import { padVars, ratioVars, type Ratio, type Spacing } from "@/lib/sizing";
 import { ArrowLeftIcon, ArrowRightIcon, LongArrowRightIcon } from "@/components/ui/Icons";
 import { ProductCard } from "@/components/product/ProductCard";
-
-type Hotspot = { x: number; y: number };
 
 type Props = {
   title: string;
@@ -22,46 +19,25 @@ type Props = {
   imageFocus?: string;
   ratio: Ratio;
   padding: Spacing;
-  /** One hotspot per product, in the same order. */
-  hotspots: Hotspot[];
   products: Product[];
 };
 
 const adj = (px: number) => ({ "--adjustment_m": `${px}px`, "--adjustment_d": `${px}px` }) as React.CSSProperties;
 
-/** `section_lookbook`: editorial image with hotspots that drive a product slider. */
-export function LookbookSection({ title, text, button, image, imageFocus, ratio, padding, hotspots, products }: Props) {
+/** `section_lookbook`: editorial image beside a product slider. */
+export function LookbookSection({ title, text, button, image, imageFocus, ratio, padding, products }: Props) {
   const [active, setActive] = useState(0);
   const [swiper, setSwiper] = useState<SwiperType | null>(null);
-  const ref = useRef<HTMLDivElement>(null);
 
   const select = (i: number) => {
     setActive(i);
     swiper?.slideTo(i);
   };
 
-  // Soft pulse on the active hotspot's halo (the `--pulse` scale in inline.css).
-  useGSAP(
-    () => {
-      const dot = ref.current?.querySelectorAll<HTMLElement>(".lookbook-hotspot")[active];
-      if (!dot) return;
-      const tween = gsap.fromTo(
-        dot,
-        { "--pulse": 1 },
-        { "--pulse": 1.6, duration: 0.9, ease: "sine.inOut", repeat: -1, yoyo: true },
-      );
-      return () => {
-        tween.kill();
-        gsap.set(dot, { "--pulse": 1 });
-      };
-    },
-    { dependencies: [active], scope: ref },
-  );
-
   return (
     <div className="shopify-section">
       <section-lookbook className="section-lookbook colorGroup--primary">
-        <div ref={ref} className="section-lookbook__template pad--responsive" style={padVars(padding)}>
+        <div className="section-lookbook__template pad--responsive" style={padVars(padding)}>
           <div className="section-lookbook__wrapper sectionMax_width">
             <div className="section-lookbook__grid">
               <div className="section-lookbook__heading">
@@ -97,18 +73,6 @@ export function LookbookSection({ title, text, button, image, imageFocus, ratio,
                         quality={QUALITY.tile}
                         style={{ objectPosition: imageFocus ?? "50% 50%" }}
                       />
-                    </div>
-                    <div className="lookbook-image-hotspots__hotspots">
-                      {hotspots.map((h, i) => (
-                        <button
-                          key={i}
-                          type="button"
-                          aria-label={`Show ${products[i]?.name}`}
-                          className={`lookbook-hotspot ${i === active ? "is-active" : ""}`}
-                          style={{ "--hotspot-x": `${h.x}%`, "--hotspot-y": `${h.y}%` } as React.CSSProperties}
-                          onClick={() => select(i)}
-                        />
-                      ))}
                     </div>
                   </div>
                 </div>

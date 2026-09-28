@@ -271,10 +271,6 @@ body {
 }
 
 /* ---------- Lookbook ---------- */
-.lookbook-hotspot:before {
-  transform: translate(-50%, -50%) scale(var(--pulse, 1));
-}
-
 /* The theme styled `swiper-init` elements; Swiper React renders div.swiper. */
 .section-lookbook .lookbook-product-slider .swiper {
   display: block;

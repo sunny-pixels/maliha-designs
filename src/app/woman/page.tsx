@@ -102,7 +102,7 @@ export default function WomanPage() {
         ]}
       />
 
-      {/* 9–10 — lookbook with hotspots */}
+      {/* 9–10 — lookbook */}
       <HeadingText text="OUR SIGNATURE CRAFT" padding={heading.topSpaced} blockPadding={heading.block} />
       <LookbookSection
         title="Made by Maliha"
@@ -112,10 +112,6 @@ export default function WomanPage() {
         imageFocus="50% 30%"
         ratio={{ m: "355/414", d: "672/784" }}
         padding={{ m: [10, 20, 16], d: [0, 40, 40] }}
-        hotspots={[
-          { x: 52, y: 38 },
-          { x: 48, y: 80 },
-        ]}
         products={lookbookProducts}
       />
 
