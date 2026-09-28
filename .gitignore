@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# asset zips (raw uploads, processed into public/images by scripts/prepare-assets.py)
+*.zip
+
+# python
+__pycache__/
+*.pyc

@@ -26,30 +26,32 @@ const look = (n: number) => `/images/lookbook/look-${String(n).padStart(2, "0")}
 const col = (slug: string) => `/collections/${slug}`;
 const link = (label: string, href: string): NavLink => ({ label, href });
 const card = (label: string, href: string, img: string): NavCard => ({ label, href, img });
+const women = (name: string) => `/images/women/${name}.jpg`;
+const about = (name: string) => `/images/about/${name}.jpg`;
 
 const aboutCards: NavCard[] = [
-  card("Book a custom fitting", "/pages/custom-orders", ig(2)),
-  card("Our craft", "/pages/our-craft", ig(4)),
+  card("Book a custom fitting", "/pages/custom-orders", about("nav-custom-fitting")),
+  card("Our craft", "/pages/our-craft", about("nav-our-craft")),
 ];
 
 export const navigation: TopMenu[] = [
   {
-    key: "woman",
-    label: "Woman",
-    href: "/woman",
+    key: "women",
+    label: "Women",
+    href: "/women",
     featured: [
       link("New Arrivals", col("new-arrivals")),
       link("The Festive Edit", col("festive-edit")),
       link("Offer: Made by Maliha", col("made-by-maliha")),
     ],
     rootCards: [
-      card("Made by Maliha - The Festive Edit", col("festive-edit"), ig(1)),
-      card("New Arrivals", col("new-arrivals"), ig(11)),
+      card("Made by Maliha - The Festive Edit", col("festive-edit"), women("nav-festive-edit")),
+      card("New Arrivals", col("new-arrivals"), women("nav-new-arrivals")),
     ],
-    mobileRootCards: [card("Made by Maliha - The Festive Edit", col("festive-edit"), ig(1))],
+    mobileRootCards: [card("Made by Maliha - The Festive Edit", col("festive-edit"), women("nav-festive-edit"))],
     second: [
       {
-        key: "woman-clothing",
+        key: "women-clothing",
         ...link("Clothing", col("clothing")),
         children: [
           link("Kurta Sets", col("kurta-sets")),
@@ -73,7 +75,7 @@ export const navigation: TopMenu[] = [
         mobileCards: [card("Kurta Sets", col("kurta-sets"), look(10))],
       },
       {
-        key: "woman-occasions",
+        key: "women-occasions",
         ...link("Occasions", col("occasions")),
         children: [
           link("Festive", col("festive")),
@@ -91,7 +93,7 @@ export const navigation: TopMenu[] = [
         mobileCards: [card("Wedding Guest", col("wedding-guest"), look(3))],
       },
       {
-        key: "woman-fabrics",
+        key: "women-fabrics",
         ...link("Fabrics", col("fabrics")),
         children: [
           link("Chanderi", col("chanderi")),
@@ -109,7 +111,7 @@ export const navigation: TopMenu[] = [
         mobileCards: [card("Organza", col("organza"), ig(3))],
       },
       {
-        key: "woman-made-by",
+        key: "women-made-by",
         ...link("Made by Maliha", col("made-by-maliha")),
         children: [],
         overflow: [],
@@ -119,7 +121,7 @@ export const navigation: TopMenu[] = [
         ],
       },
       {
-        key: "woman-edits",
+        key: "women-edits",
         ...link("Edits", col("edits")),
         children: [
           link("In Celebration", col("in-celebration")),
@@ -142,7 +144,7 @@ export const navigation: TopMenu[] = [
         ],
       },
       {
-        key: "woman-inspiration",
+        key: "women-inspiration",
         ...link("Inspiration", "/blogs/inspiration"),
         children: [],
         overflow: [],

@@ -1,4 +1,6 @@
 {
+ "/images/about/nav-custom-fitting.jpg": "data:image/webp;base64,UklGRlAAAABXRUJQVlA4IEQAAAAQAgCdASoIAAoAA4BaJbACdLoAAslVjYOAAP6YuIOD6enS90hRZVO9Y4ebBLsmjTm+Cfs4t92ZmbOL5OGS4ZNzBQAAAA==",
+ "/images/about/nav-our-craft.jpg": "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAADwAQCdASoIAAoAA4BaJaACdAD0udWzooAA338gY0UpgT1WiNlHK3IXaZuu/EhZB0KU5XUzX/3mmX30U5p2TqZTTklOrAGRkJfFgAAA",
  "/images/lookbook/look-03.jpg": "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAADwAQCdASoHAAoAA4BaJZACdAD0odXQqZAA/uHsmX/QeQ1WpxDRhXXxugzuUrnrouqzfahCHoB8TBMVCD4aKx85DA95hKAA",
  "/images/lookbook/look-04.jpg": "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAADQAQCdASoHAAoAA4BaJZgCdAD0XaGxMAD+aIdsRVvzQ43jSIq8CsVgGrnPKlzM/4FRcIqmbBi+8V6tV9c/6lT9nwdHZ8wA",
  "/images/lookbook/look-05.jpg": "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAADQAQCdASoHAAoAA4BaJZQCdAD0K+sjQAD+mYC+r8WvsfmDr6bW3mV3mXxWo6AsgPHFEAi5dDeLhrTSnvygYAAA",
@@ -34,7 +36,7 @@
  "/images/lookbook/look-35.jpg": "data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAACwAQCdASoHAAoAA4BaJQBOgBt6mROwAP6yCueL9fiwPCW96/pKGnO+RgXkh57tcLOVSIw+dOZbfrwAAAA=",
  "/images/maliha/banner-atelier.jpg": "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAACwAQCdASoKAAQAA4BaJagCdAELSlqwAOJlt1HlrK2W5i5xP7KqFB3GAxmqUDvfSTeKh3jd1oRUvevU9LlfybcwAAA=",
  "/images/maliha/banner-lookbook.jpg": "data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAACwAQCdASoKAAQAA4BaJaACdADdE5HYAP2dcLejGtwsD8znWQ80P+6ZRYSKJ7sRIXaDKjfBShq+O4QAAAA=",
- "/images/maliha/banner-woman.jpg": "data:image/webp;base64,UklGRkQAAABXRUJQVlA4IDgAAADwAQCdASoKAAQAA4BaJagCdLoAAnX/qaAA/jOOQEBLuCphfkMEdkNy3R5y/isoDlxX1DikNSAAAA==",
+ "/images/maliha/banner-women.jpg": "data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAAAQAgCdASoKAAQAA4BaJagCdLoAAoMTwPAAAP1O2vA87dK6KmZd/KsWHgPo/6F5GysvIUO5/FsUhqQAAAA=",
  "/images/maliha/ig-01.jpg": "data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAADQAQCdASoIAAoAA4BaJaACdAD0j6FuAAD+9LSCrgEdLwOXxVoZAK8bzrLdP4JH1keRetssRts8vhwAAAA=",
  "/images/maliha/ig-02.jpg": "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAAAQAgCdASoIAAoAA4BaJbACdLoAAriD82MAAP6YuIODu0yLKb6/B6F7koi9LDVExG/xyyn2jE8So668SZRydyTAAAA=",
  "/images/maliha/ig-03.jpg": "data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAADwAQCdASoIAAoAA4BaJZACdAEedUlbnUAA/u7jAffYDScYzVwOY4rz0t7g2aYqWXKpiMNGu6T9DTwAAAA=",
@@ -54,5 +56,21 @@
  "/images/variants/zari-stripe-red-3.jpg": "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAAAQAgCdASoHAAoAA4BaJYwCdAEDe4rCgrmAAP7F33pxy/oWaZfjXRjhiEcEqCAtfT4d5i3/eFdYkcklVTBK9swaybkBYAAA",
  "/images/variants/zari-stripe-yellow-1.jpg": "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAAAQAgCdASoHAAoAA4BaJZACdAEDoQ3LwdgAAP7F32LEjCkkoW+UVrKin2HyScG9S242m2/kYTOS51gA",
  "/images/variants/zari-stripe-yellow-2.jpg": "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAACwAQCdASoHAAoAA4BaJbACdADZmtoYAP4BExd8D8lHQ/C7xhLw95X0S/1MIB/NKQpvLtxd0n89P1gY6Rl4MWiAAAA=",
- "/images/variants/zari-stripe-yellow-3.jpg": "data:image/webp;base64,UklGRkoAAABXRUJQVlA4ID4AAADwAQCdASoHAAoAA4BaJYgCdAD0QTZiEgAA/sd53TTsFr5jukqlcxPTHR9hIj7YJGKeHNLoPMv7GarkudYAAA=="
+ "/images/variants/zari-stripe-yellow-3.jpg": "data:image/webp;base64,UklGRkoAAABXRUJQVlA4ID4AAADwAQCdASoHAAoAA4BaJYgCdAD0QTZiEgAA/sd53TTsFr5jukqlcxPTHR9hIj7YJGKeHNLoPMv7GarkudYAAA==",
+ "/images/women/autumn-winter.jpg": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAAAwAgCdASoKAAoAA4BaJbACdAD0pd26tb7wAADeYX2n07KJI4ReSwyDn854uAvg8DHM3j708p+81838YrornlPNLj+eak8T0jg3qL+PrSbJkQeoJmGAAA==",
+ "/images/women/craft-left.jpg": "data:image/webp;base64,UklGRkQAAABXRUJQVlA4IDgAAAAQAgCdASoIAAoAA4BaJYgCdAD0mjlNeeaAAP7mkTH28+8XLG3jX7+yhb31kLAnwydGtCrRGwAAAA==",
+ "/images/women/craft-right-1.jpg": "data:image/webp;base64,UklGRkQAAABXRUJQVlA4IDgAAADwAQCdASoIAAoAA4BaJYgCdAD0meBMWuAA/uYJAEaahOAULkAWhiDIJ5BhqBj0qoZhWu710SSgAA==",
+ "/images/women/craft-right-2.jpg": "data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAADwAQCdASoIAAoAA4BaJagCdAD0TmoZMgAA/uN+98EXsWLcoBaZXiqIalw3ulGjYxMoHD2r4u6OgwdAAAA=",
+ "/images/women/discover-co-ord-sets.jpg": "data:image/webp;base64,UklGRkoAAABXRUJQVlA4ID4AAABQAgCdASoIAAoAA4BaJbACdLoAAx8eWvvIrgAA4m75aigl82xt/0Y4zfCMa6GBtj4/Qo2Ydfz9REQUiWAAAA==",
+ "/images/women/discover-drapes-dupattas.jpg": "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAADwAQCdASoIAAoAA4BaJZACdAEfA51zlSAA/u7jAlCgJyd/JUBZ5FGaQJ5ZsDRdJ5GGjXdJ+hp4AAAA",
+ "/images/women/discover-kurta-sets.jpg": "data:image/webp;base64,UklGRkoAAABXRUJQVlA4ID4AAADQAQCdASoIAAoAA4BaJbACdAEOtv7ZAAD+vflt0BxQdv08OIeVlnQB/V5iscOVri5vPLKbvEo+GFr0gAAAAA==",
+ "/images/women/discover-sharara-sets.jpg": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADwAQCdASoHAAoAA4BaJYgCdAEYGutYM1AA+9Jv7/Ti/XBz09rNvFuA3Q9cZWmg8lSZ6oR/zN159eiItoDCe6W/sXqkLb8RgAA=",
+ "/images/women/hand-picked.jpg": "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAADQAQCdASoKAAoAA4BaJaACdACv9AWMAAD+wdLO1FY/GRDd/Db17GbWIPHx+Etyof907jlabVIkcOEKg8QKs3cs+0L0AAAA",
+ "/images/women/hero-mobile.jpg": "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAAAQAgCdASoIAAoAA4BaJbACdLoAAzeSX4AAAMv2NPPvEBFO0tBN5+J5oGHg/Fb6mpHx/WEPopHAeAAA",
+ "/images/women/home-cover.jpg": "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAADwAQCdASoIAAoAA4BaJZACdAEfA51zlSAA/u7jAlCgJyd/JUBZ5FGaQJ5ZsDRdJ5GGjXdJ+hp4AAAA",
+ "/images/women/in-celebration.jpg": "data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAADwAQCdASoIAAoAA4BaJagCdAD0TmoZMgAA/uN+98EXsWLcoBaZXiqIalw3ulGjYxMoHD2r4u6OgwdAAAA=",
+ "/images/women/in-focus-new-arrivals.jpg": "data:image/webp;base64,UklGRkoAAABXRUJQVlA4ID4AAAAQAgCdASoHAAoAA4BaJbACdLoAAnWeg0/gAPlRhpkO4f6+lvOAOu61Vrd5qAfJhqJXtwKaIWeLD27F29TgAA==",
+ "/images/women/nav-festive-edit.jpg": "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAACwAQCdASoIAAoAA4BaJZgCdADzHMkAAP70tIKuAjKrG5KnVAXNFAJJ1lun8EWbSorbu6l2Ymb74gAA",
+ "/images/women/nav-new-arrivals.jpg": "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAAAQAgCdASoHAAoAA4BaJbACdLoAAnDOrFUAAPz3RKB7Gdhe0qsU0tHlqlsE5CFA1JvmRU/Jx+mLclYPi2KQ/gAA",
+ "/images/women/spring-summer.jpg": "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAACwAQCdASoIAAoAA4BaJYgCdADzVLLIAMySouASIM9qTDGSqTAFMGEixjMTUKGTzFy1Y+gB5fHhZpk9VntV6ijhsVKdqxAA"
 }

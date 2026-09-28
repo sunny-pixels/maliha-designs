@@ -23,6 +23,8 @@ PUBLIC = ROOT / "public"
 LOOKBOOK = PUBLIC / "images" / "lookbook"
 MALIHA = PUBLIC / "images" / "maliha"
 VARIANTS = PUBLIC / "images" / "variants"
+WOMEN = PUBLIC / "images" / "women"
+ABOUT = PUBLIC / "images" / "about"
 QUALITY = 82
 # Largest width any slot needs: lookbook tiles are ≤ 1/3 of a 1440px layout at
 # 2x DPR, product cards ≤ 1/4. Bigger originals only slow the image optimiser.
@@ -104,6 +106,54 @@ def triptych(paths: list[Path], w: int, h: int, focus_y: float, trim_left: list[
         out.paste(cover(img, panel, h, focus_y), (i * panel, 0))
     return out
 
+# Supplied art for the Women page ("<source name>": "<public name>"), from
+# maliha-assets/women. The three landing banners are only used as the hero
+# triptych, so just the first (also the mobile crop) is saved on its own.
+WOMEN_ART = {
+    "women navbar dropdown 1 - left.jpg": "nav-festive-edit.jpg",
+    "women navbar dropdown 2 - right.jpg": "nav-new-arrivals.jpg",
+    "women - landing banner 1.jpg": "hero-mobile.jpg",
+    "women - discover collection - kurta sets.jpg": "discover-kurta-sets.jpg",
+    "women - discover collection - sharara sets.jpg": "discover-sharara-sets.jpg",
+    "women - discover collection - drapes & dupattas.jpg": "discover-drapes-dupattas.jpg",
+    "women - discover collection - co-ord sets.jpg": "discover-co-ord-sets.jpg",
+    "women - in focus - new arrivals.jpg": "in-focus-new-arrivals.jpg",
+    "women - craft - left 1.jpg": "craft-left.jpg",
+    "women - craft - right 1.jpg": "craft-right-1.jpg",
+    "women - craft - right 2.jpg": "craft-right-2.jpg",
+    "women - spring_summer.jpg": "spring-summer.jpg",
+    "women - autumn_winter.jpg": "autumn-winter.jpg",
+    "women - hand picked.jpg": "hand-picked.jpg",
+    "women - in celebration.jpg": "in-celebration.jpg",
+}
+
+
+def save_women() -> None:
+    """Women page art, plus its hero banner at the desktop ratio (24/10)."""
+    src = SRC / "women"
+    WOMEN.mkdir(parents=True, exist_ok=True)
+    for name, dest in WOMEN_ART.items():
+        save(Image.open(src / name).convert("RGB"), WOMEN / dest)
+    landing = [src / f"women - landing banner {n}.jpg" for n in (1, 2, 3)]
+    # Top-aligned: the middle photo is already cropped close to the model's head.
+    save(triptych(landing, 2400, 1000, 0.0), MALIHA / "banner-women.jpg", max_w=2400)
+
+
+# Supplied art for the About us menu cards, from maliha-assets/about.
+ABOUT_ART = {
+    "aboutus 1.jpg": "nav-custom-fitting.jpg",
+    "aboutus 2.jpg": "nav-our-craft.jpg",
+}
+
+
+def save_about() -> None:
+    """The two cards shown beside every About us menu level."""
+    ABOUT.mkdir(parents=True, exist_ok=True)
+    for name, dest in ABOUT_ART.items():
+        save(Image.open(SRC / "about" / name).convert("RGB"), ABOUT / dest)
+
+
+
 GOLD = (156, 122, 60)
 CREAM = (253, 252, 251)
 APP = ROOT / "src" / "app"
@@ -144,7 +194,7 @@ def share_image(photo: Image.Image, dest: Path) -> None:
 
 def build_share_images() -> None:
     W, H = 1200, 630
-    # Landing: the two hero tiles (Woman | Lookbook), as on the home page.
+    # Landing: the two hero tiles (Women | Lookbook), as on the home page.
     home = Image.new("RGB", (W, H))
     home.paste(cover(Image.open(MALIHA / "ig-03.jpg").convert("RGB"), W // 2, H, 0.25), (0, 0))
     home.paste(cover(Image.open(LOOKBOOK / "look-15.jpg").convert("RGB"), W // 2, H, 0.18), (W // 2, 0))
@@ -155,7 +205,7 @@ def build_share_images() -> None:
         (APP / name).write_text(alt, encoding="utf-8")
 
     for route, banner, focus, text in [
-        ("woman", "banner-woman.jpg", 0.3, "Maliha Woman – kurta sets, shararas, lehengas and dupattas"),
+        ("women", "banner-women.jpg", 0.3, "Maliha Women – kurta sets, shararas, lehengas and dupattas"),
         ("lookbook", "banner-lookbook.jpg", 0.2, "Maliha SS21 Lookbook"),
     ]:
         share_image(cover(Image.open(MALIHA / banner).convert("RGB"), W, H, focus), APP / route / "opengraph-image.jpg")
@@ -190,6 +240,7 @@ def main() -> None:
     # Remove the old Ströms imagery.
     for old in ["hero-man.jpg", "hero-woman.jpg", "store-facade.jpg"]:
         (PUBLIC / "images" / old).unlink(missing_ok=True)
+    (MALIHA / "banner-woman.jpg").unlink(missing_ok=True)
     shutil.rmtree(PUBLIC / "images" / "menu", ignore_errors=True)
     # New filename so image-optimiser and browser caches never serve the old logo.
     for placeholder in ["logo.svg", "logo-footer.svg", "logo.png"]:
@@ -210,11 +261,12 @@ def main() -> None:
         save(Image.open(path).convert("RGB"), MALIHA / f"ig-{n:02d}.jpg")
 
     # Wide banners at the exact desktop ratios (24/10 and 10/4).
-    save(triptych([MALIHA / "ig-09.jpg", MALIHA / "ig-10.jpg", MALIHA / "ig-11.jpg"], 2400, 1000, 0.3, trim_left=[0.05, 0.05, 0.14]), MALIHA / "banner-woman.jpg", max_w=2400)
     save(triptych([LOOKBOOK / "look-10.jpg", LOOKBOOK / "look-16.jpg", LOOKBOOK / "look-23.jpg"], 2400, 960, 0.22), MALIHA / "banner-atelier.jpg", max_w=2400)
     save(triptych([LOOKBOOK / "look-05.jpg", LOOKBOOK / "look-15.jpg", LOOKBOOK / "look-30.jpg"], 2400, 1000, 0.2), MALIHA / "banner-lookbook.jpg", max_w=2400)
 
     save_variants()
+    save_women()
+    save_about()
     build_icons()
     build_share_images()
     write_placeholders()

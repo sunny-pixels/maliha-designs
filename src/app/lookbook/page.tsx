@@ -73,7 +73,7 @@ export default function LookbookPage() {
         items={[
           { image: ig(2), focus: "50% 30%", href: "/pages/about-us", title: "The Atelier", button: "DISCOVER" },
           { image: ig(7), focus: "50% 25%", href: "/collections/lilac-edit", title: "The Lilac Edit", button: "SHOP NOW" },
-          { image: ig(1), focus: "50% 30%", href: "/woman", title: "Shop Woman", button: "EXPLORE" },
+          { image: ig(1), focus: "50% 30%", href: "/women", title: "Shop Women", button: "EXPLORE" },
         ]}
       />
     </main>
