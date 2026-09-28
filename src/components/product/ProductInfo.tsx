@@ -36,10 +36,10 @@ export function AtcText() {
 
 const USPS = ["Free shipping across India", "Easy size exchanges within 7 days", "Handcrafted in small batches"];
 
-/** `breadcrumbs`: Woman › Clothing › category (the last two stay inert until collections exist). */
+/** `breadcrumbs`: Women › Clothing › category (the last two stay inert until collections exist). */
 export function Breadcrumbs({ product }: { product: Product }) {
   const crumbs = [
-    { label: "Woman", href: "/woman" },
+    { label: "Women", href: "/women" },
     { label: "Clothing", href: "/collections/clothing" },
     { label: product.category.label, href: `/collections/${product.category.slug}` },
   ];
@@ -265,9 +265,6 @@ export function ProductInfo({ product, pairs, size, onSize, atcState, onAdd, fav
 
         <div className="pm__title" data-pm-sticky="">
           <div className="pm__title-meta">
-            <Link className="u-p3 pm__designer-link" href="/woman">
-              {product.brand}
-            </Link>
             <h1 className="u-h2 pm__product-title">{product.name}</h1>
           </div>
           <div className="ProductInfo--Prices" aria-live="polite" aria-atomic="true">

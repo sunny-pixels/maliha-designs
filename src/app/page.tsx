@@ -9,7 +9,7 @@ export default function Home() {
         alignment="middleCenter"
         priority
         items={[
-          { image: "/images/maliha/ig-03.jpg", href: "/woman", button: "WOMAN", focus: "50% 25%" },
+          { image: "/images/women/home-cover.jpg", href: "/women", button: "WOMEN", focus: "50% 20%" },
           { image: "/images/lookbook/look-15.jpg", href: "/lookbook", button: "LOOKBOOK", focus: "50% 20%" },
         ]}
       />

@@ -8,26 +8,26 @@ import { featuredProducts, lookbookProducts } from "@/data/products";
 import { shareMetadata } from "@/lib/seo";
 import type { Spacing } from "@/lib/sizing";
 
-const title = "Woman – Kurta Sets, Lehengas & Occasion Wear";
+const title = "Women – Kurta Sets, Lehengas & Occasion Wear";
 const description = "Handcrafted Indian occasion wear for women by Maliha — kurta sets, shararas, lehengas and dupattas.";
 
 export const metadata: Metadata = {
   title,
   description,
-  ...shareMetadata({ title: `${title} | Maliha`, description, path: "/woman" }),
+  ...shareMetadata({ title: `${title} | Maliha`, description, path: "/women" }),
 };
 
-const ig = (n: number) => `/images/maliha/ig-${String(n).padStart(2, "0")}.jpg`;
 const look = (n: number) => `/images/lookbook/look-${String(n).padStart(2, "0")}.jpg`;
+const women = (name: string) => `/images/women/${name}.jpg`;
 
-// Heading paddings copied from the Woman template (section wrapper + inner block).
+// Heading paddings copied from the Women template (section wrapper + inner block).
 const heading = {
   top: { m: [0, 0, 16], d: [20, 0, 0] } as Spacing,
   topSpaced: { m: [0, 20, 16], d: [20, 20, 0] } as Spacing,
   block: { m: [20, 0, 0], d: [0, 0, 16] } as Spacing,
 };
 
-export default function WomanPage() {
+export default function WomenPage() {
   return (
     <main id="MainContent" className="content-for-layout">
       {/* 1 — hero banner */}
@@ -38,8 +38,8 @@ export default function WomanPage() {
         alignment="middleCenter"
         items={[
           {
-            image: "/images/maliha/banner-woman.jpg",
-            mobileImage: ig(9),
+            image: "/images/maliha/banner-women.jpg",
+            mobileImage: women("hero-mobile"),
             focus: "50% 30%",
             href: "/collections/festive-edit",
             title: "Made by Maliha - The Festive Edit",
@@ -59,8 +59,8 @@ export default function WomanPage() {
         padding={{ m: [8, 0, 0], d: [24, 0, 0] }}
         columns={{ m: 2, d: 2 }}
         items={[
-          { image: ig(1), href: "/collections/kurta-sets", button: "KURTA SETS", focus: "50% 30%" },
-          { image: ig(5), href: "/collections/sharara-sets", button: "SHARARA SETS", focus: "50% 28%" },
+          { image: women("discover-kurta-sets"), href: "/collections/kurta-sets", button: "KURTA SETS", focus: "50% 30%" },
+          { image: women("discover-sharara-sets"), href: "/collections/sharara-sets", button: "SHARARA SETS", focus: "50% 28%" },
         ]}
       />
       <CustomImageGallery
@@ -68,8 +68,8 @@ export default function WomanPage() {
         padding={{ m: [8, 0, 0], d: [16, 0, 0] }}
         columns={{ m: 2, d: 2 }}
         items={[
-          { image: ig(3), href: "/collections/drape-sets", button: "DRAPES & DUPATTAS", focus: "50% 25%" },
-          { image: ig(10), href: "/collections/co-ord-sets", button: "CO-ORD SETS", focus: "50% 30%" },
+          { image: women("discover-drapes-dupattas"), href: "/collections/drape-sets", button: "DRAPES & DUPATTAS", focus: "50% 25%" },
+          { image: women("discover-co-ord-sets"), href: "/collections/co-ord-sets", button: "CO-ORD SETS", focus: "50% 30%" },
         ]}
       />
 
@@ -84,7 +84,7 @@ export default function WomanPage() {
         alignment="bottomLeft"
         items={[
           {
-            image: ig(11),
+            image: women("in-focus-new-arrivals"),
             focus: "50% 20%",
             href: "/collections/new-arrivals",
             title: "New Arrivals",
@@ -108,7 +108,7 @@ export default function WomanPage() {
         title="Made by Maliha"
         text="Every Maliha piece begins with a sketch by Anar & Anoli and is finished by hand — tonal thread-work on organza, scalloped edges and soft chanderi drapes. Designed for celebrations, made to be worn again and again."
         button={{ label: "SEE THE FULL COLLECTION", href: "/collections/made-by-maliha" }}
-        image={ig(6)}
+        image={women("craft-left")}
         imageFocus="50% 30%"
         ratio={{ m: "355/414", d: "672/784" }}
         padding={{ m: [10, 20, 16], d: [0, 40, 40] }}
@@ -121,10 +121,10 @@ export default function WomanPage() {
         alignment="bottomLeft"
         padding={{ m: [0, 20, 0], d: [0, 0, 0] }}
         items={[
-          { image: look(5), focus: "50% 20%", href: "/collections/lehengas", title: "Lehengas", button: "SHOP NOW" },
-          { image: look(26), focus: "50% 20%", href: "/collections/anarkalis", title: "Anarkalis", button: "SHOP NOW" },
-          { image: look(12), focus: "50% 20%", href: "/collections/palazzo-sets", title: "Palazzo Sets", button: "SHOP NOW" },
-          { image: look(11), focus: "50% 20%", href: "/collections/dupattas", title: "Dupattas", button: "SHOP NOW" },
+          { image: women("spring-summer"), focus: "50% 20%", href: "/collections/spring-summer", title: "Spring/Summer", button: "SHOP NOW" },
+          { image: women("autumn-winter"), focus: "50% 20%", href: "/collections/autumn-winter", title: "Autumn/Winter", button: "SHOP NOW" },
+          { image: look(12), focus: "50% 20%", href: "/collections/festive", title: "Festive", button: "SHOP NOW" },
+          { image: women("hand-picked"), focus: "50% 20%", href: "/collections/hand-picked", title: "Hand Picked", button: "SHOP NOW" },
         ]}
       />
 
@@ -139,7 +139,7 @@ export default function WomanPage() {
         alignment="bottomLeft"
         padding={{ m: [0, 20, 0], d: [0, 0, 0] }}
         items={[
-          { image: ig(8), focus: "50% 25%", href: "/collections/in-celebration", title: "In Celebration", button: "SEE ALL" },
+          { image: women("in-celebration"), focus: "50% 25%", href: "/collections/in-celebration", title: "In Celebration", button: "SEE ALL" },
           { image: look(29), focus: "50% 20%", href: "/collections/in-evening", title: "In Evening", button: "DISCOVER" },
           { image: look(28), focus: "50% 20%", href: "/collections/in-ease", title: "In Ease", button: "EXPLORE" },
         ]}

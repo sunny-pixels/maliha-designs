@@ -180,7 +180,7 @@ export function ProductModule({ product, pairs }: Props) {
           <div className="pm__sticky-product-info">
             <div className="pm__sticky-atc-desktop-meta not_mobile not_pocket">
               <p className="pm__sticky-atc-brand u-p3">
-                <Link href="/woman" tabIndex={showStickyAtc ? undefined : -1}>
+                <Link href="/women" tabIndex={showStickyAtc ? undefined : -1}>
                   {product.brand}
                 </Link>
               </p>

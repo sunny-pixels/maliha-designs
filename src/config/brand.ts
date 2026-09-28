@@ -7,7 +7,7 @@ export const brand = {
   footerLogo: { src: "/logo-maliha.png", width: 539, height: 143 },
   email: "hello@malihadesigns.com",
   phone: "+91 00000 00000",
-  address: "Mumbai, India",
+  address: "Ahmedabad, Gujarat, India",
   country: "India",
   currency: "INR",
   socials: [

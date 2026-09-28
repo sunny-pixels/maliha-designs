@@ -26,6 +26,7 @@ export type Product = {
 
 const look = (n: number) => `/images/lookbook/look-${String(n).padStart(2, "0")}.jpg`;
 const ig = (n: number) => `/images/maliha/ig-${String(n).padStart(2, "0")}.jpg`;
+const women = (name: string) => `/images/women/${name}.jpg`;
 
 const sizes = (unavailable: string[] = []) =>
   ["XS", "S", "M", "L", "XL"].map((label) => ({ label, available: !unavailable.includes(label) }));
@@ -309,7 +310,7 @@ export const lookbookProducts: Product[] = [
   product({
     name: "Lilac Hand-Embroidered Drape Set",
     label: "NEW",
-    images: [ig(6), ig(7), ig(3)],
+    images: [women("craft-right-1"), ig(7), ig(3)],
     colors: [{ name: "Lilac", hex: "#b597b8" }],
     sizes: sizes(),
     price: 24500,
@@ -328,7 +329,7 @@ export const lookbookProducts: Product[] = [
   product({
     name: "Plum Scalloped Palazzo Set",
     label: "NEW",
-    images: [ig(8), ig(7)],
+    images: [women("craft-right-2"), ig(7)],
     colors: [{ name: "Plum", hex: "#6f4d68" }],
     sizes: sizes(["XS"]),
     price: 19900,
