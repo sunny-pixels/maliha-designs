@@ -28,7 +28,7 @@ export default function Home() {
         items={[
           {
             image: "/images/maliha/banner-atelier.jpg",
-            mobileImage: "/images/maliha/ig-05.jpg",
+            mobileImage: "/images/maliha/atelier-mobile.jpg",
             href: "/pages/about-us",
             title: "The Atelier",
             text: "Handcrafted occasion wear by Anar & Anoli",
