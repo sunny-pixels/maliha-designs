@@ -60,7 +60,7 @@ export default function WomenPage() {
         padding={{ m: [8, 0, 0], d: [24, 0, 0] }}
         columns={{ m: 2, d: 2 }}
         items={[
-          { image: women("nav-festive-edit"), href: "/collections/kurta-sets", button: "DUSTY PINK CO-ORD SETS", focus: "50% 25%" },
+          { image: women("nav-festive-edit"), href: "/collections/kurta-sets", button: "RICH LAVENDER CO-ORD SETS", focus: "50% 25%" },
           { image: look(14), href: "/collections/sharara-sets", button: "ROSY PINK KURTI", focus: "50% 22%" },
         ]}
       />
