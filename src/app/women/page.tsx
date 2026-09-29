@@ -61,7 +61,7 @@ export default function WomenPage() {
         columns={{ m: 2, d: 2 }}
         items={[
           { image: women("nav-festive-edit"), href: "/collections/kurta-sets", button: "DUSTY PINK CO-ORD SETS", focus: "50% 25%" },
-          { image: look(14), href: "/collections/sharara-sets", button: "ROSY PINK", focus: "50% 22%" },
+          { image: look(14), href: "/collections/sharara-sets", button: "ROSY PINK KURTI", focus: "50% 22%" },
         ]}
       />
       <CustomImageGallery
@@ -69,8 +69,8 @@ export default function WomenPage() {
         padding={{ m: [8, 0, 0], d: [16, 0, 0] }}
         columns={{ m: 2, d: 2 }}
         items={[
-          { image: "/images/variants/zari-stripe-blue-2.jpg", href: "/collections/drape-sets", button: "ROYAL BLUE", focus: "50% 20%" },
-          { image: women("discover-kurta-sets"), href: "/collections/co-ord-sets", button: "SAGE GREEN", focus: "50% 30%" },
+          { image: "/images/variants/zari-stripe-blue-2.jpg", href: "/collections/drape-sets", button: "ROYAL BLUE KURTI", focus: "50% 20%" },
+          { image: women("discover-kurta-sets"), href: "/collections/co-ord-sets", button: "SAGE GREEN KURTI", focus: "50% 30%" },
         ]}
       />
 
