@@ -8,7 +8,7 @@ import { featuredProducts, lookbookProducts } from "@/data/products";
 import { shareMetadata } from "@/lib/seo";
 import type { Spacing } from "@/lib/sizing";
 
-const title = "Women – Kurta Sets, Lehengas & Occasion Wear";
+const title = "Women";
 const description = "Handcrafted Indian occasion wear for women by Maliha — kurta sets, shararas, lehengas and dupattas.";
 
 export const metadata: Metadata = {
