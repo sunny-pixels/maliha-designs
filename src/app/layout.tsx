@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { brandFont } from "./fonts";
 import { shareMetadata, siteDescription, siteUrl } from "@/lib/seo";
 
@@ -84,6 +85,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <ScrollReveal />
           </CartProvider>
         </UIProvider>
+        <Analytics />
       </body>
     </html>
   );
